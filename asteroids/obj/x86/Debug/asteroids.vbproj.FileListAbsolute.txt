@@ -1,0 +1,9 @@
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\bin\Debug\asteroids.exe
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\bin\Debug\asteroids.pdb
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\bin\Debug\asteroids.xml
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.Form1.resources
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.Resources.resources
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.vbproj.GenerateResource.Cache
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.exe
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.xml
+\\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.pdb
