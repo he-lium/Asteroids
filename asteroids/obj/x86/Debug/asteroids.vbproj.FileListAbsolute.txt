@@ -7,3 +7,12 @@
 \\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.exe
 \\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.xml
 \\SR8137CF01-FS02\StudentUsers\2015\437078866\Documents\asteroids\asteroids\obj\x86\Debug\asteroids.pdb
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.exe
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.xml
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.pdb
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\bin\Debug\asteroids.exe
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\bin\Debug\asteroids.pdb
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\bin\Debug\asteroids.xml
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.Form1.resources
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.Resources.resources
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.vbproj.GenerateResource.Cache

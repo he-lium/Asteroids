@@ -43,9 +43,9 @@
             vx += Math.Cos(direction) * 0.5
         End If
         PictureBox1.Top += vy
-        PictureBox1.Top = truemod(PictureBox1.Top, 507)
+        PictureBox1.Top = truemod(PictureBox1.Top, Me.Size.Height)
         PictureBox1.Left += vx
-        PictureBox1.Left = truemod(PictureBox1.Left, 785)
+        PictureBox1.Left = truemod(PictureBox1.Left, Me.Size.Width)
         vx = vx * 0.98
         vy = vy * 0.98
         move_asteroid(asteroids(0))
