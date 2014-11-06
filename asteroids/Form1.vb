@@ -1,15 +1,17 @@
 ﻿Public Class Form1
     Const NUM_ASTEROIDS As Integer = 1
-    Const MAX_SPEED As Integer = 100
+    Const MAX_SPEED As Integer = 50
     Const ACCELERATION As Double = 0.5
     Const TORQUE As Double = 0.05
     Const MIN_ASTEROID_SPEED As Integer = -20
     Const MAX_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 2000
+    Const GRAVITY As Integer = 4000
 
     Private vx As Double = 0
     Private vy As Double = 0
+    Private x As Double
+    Private y As Double
     Private direction As Double = Math.PI * 0.5
     Private degrees As Integer = 90
     Dim upkey = False, leftkey = False, rightkey = False
@@ -52,16 +54,18 @@
             vy -= Math.Sin(direction) * ACCELERATION
             vx += Math.Cos(direction) * ACCELERATION
         End If
-        Dim dist As Double = GRAVITY / Math.Max(((((PictureBox1.Top + PictureBox1.Bottom) / 2) - ((PictureBox2.Top + PictureBox2.Bottom) / 2)) ^ 2) + ((((PictureBox1.Right + PictureBox1.Left) / 2) - ((PictureBox2.Right + PictureBox2.Left) / 2)) ^ 2), 1)
-        Dim deg As Double = Math.Atan2((((PictureBox1.Top + PictureBox1.Bottom) / 2) - ((PictureBox2.Top + PictureBox2.Bottom) / 2)), (((PictureBox1.Right + PictureBox1.Left) / 2) - ((PictureBox2.Right + PictureBox2.Left) / 2)))
+        Dim dist As Double = GRAVITY / Math.Max(((y - ((PictureBox2.Top + PictureBox2.Bottom) / 2)) ^ 2) + ((x - ((PictureBox2.Right + PictureBox2.Left) / 2)) ^ 2), 1)
+        Dim deg As Double = Math.Atan2((y - ((PictureBox2.Top + PictureBox2.Bottom) / 2)), (x - ((PictureBox2.Right + PictureBox2.Left) / 2)))
         vy -= Math.Sin(deg) * dist
         vx -= Math.Cos(deg) * dist
-        PictureBox1.Top += vy
-        PictureBox1.Top = truemod(PictureBox1.Top, Me.Bottom - Me.Top)
-        PictureBox1.Left += vx
-        PictureBox1.Left = truemod(PictureBox1.Left, Me.Right - Me.Left)
         vx = Math.Min(MAX_SPEED, vx)
         vy = Math.Min(MAX_SPEED, vy)
+        y += vy
+        y = truemod(y, Me.Bottom - Me.Top)
+        x += vx
+        x = truemod(x, Me.Right - Me.Left)
+        PictureBox1.Left = x - PictureBox1.Width / 2
+        PictureBox1.Top = y - PictureBox1.Height / 2
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
@@ -101,6 +105,8 @@
     End Function
 
     Private Sub Form1_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+        x = (PictureBox1.Right + PictureBox1.Left) / 2
+        y = (PictureBox1.Top + PictureBox1.Bottom) / 2
         Randomize()
         For i = 0 To NUM_ASTEROIDS - 1
             asteroids(i) = make_asteroid(MAX_ASTEROID_SIZE)
