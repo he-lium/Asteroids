@@ -1,13 +1,14 @@
 ﻿Public Class Form1
     Const NUM_ASTEROIDS As Integer = 0
-    Const MAX_SPEED As Integer = 50
+    Const MAX_SPEED As Integer = 5000
     Const ACCELERATION As Double = 0.5
     Const TORQUE As Double = 0.05
     Const MIN_ASTEROID_SPEED As Integer = -20
     Const MAX_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 9001
+    Const GRAVITY As Integer = 100000
 
+    Private fps As Integer = 0
     Private direction As Double = Math.PI * 0.5
     Private degrees As Integer = 90
     Dim upkey = False, leftkey = False, rightkey = False
@@ -48,7 +49,7 @@
             direction -= Math.PI * TORQUE
         End If
         degrees = truemod(direction * (180 / Math.PI), 360)
-        Me.Text = degrees
+        Label1.Text = degrees
         If upkey Then
             spaceship.vy -= Math.Sin(direction) * ACCELERATION
             spaceship.vx += Math.Cos(direction) * ACCELERATION
@@ -59,10 +60,13 @@
         spaceship.vx -= Math.Cos(deg) * dist
         spaceship.vx = Math.Min(MAX_SPEED, spaceship.vx)
         spaceship.vy = Math.Min(MAX_SPEED, spaceship.vy)
+        spaceship.vx = Math.Max(-MAX_SPEED, spaceship.vx)
+        spaceship.vy = Math.Max(-MAX_SPEED, spaceship.vy)
         move_asteroid(spaceship)
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
+        fps += 1
     End Sub
 
     Private Sub move_asteroid(ByRef tmp As asteroid)
@@ -109,10 +113,15 @@
         spaceship.y = (spaceship.picture.Top + spaceship.picture.Bottom) / 2
         spaceship.size = 0
         spaceship.vx = 0
-        spaceship.vy = 0
+        spaceship.vy = 15
         Randomize()
         For i = 0 To NUM_ASTEROIDS - 1
             asteroids(i) = make_asteroid(MAX_ASTEROID_SIZE)
         Next
+    End Sub
+
+    Private Sub Timer2_Tick(sender As System.Object, e As System.EventArgs) Handles Timer2.Tick
+        Label2.Text = fps
+        fps = 0
     End Sub
 End Class
