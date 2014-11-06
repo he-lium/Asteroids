@@ -6,7 +6,7 @@
     Const MIN_ASTEROID_SPEED As Integer = -20
     Const MAX_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 5
+    Const GRAVITY As Integer = 2000
 
     Private vx As Double = 0
     Private vy As Double = 0
@@ -52,10 +52,10 @@
             vy -= Math.Sin(direction) * ACCELERATION
             vx += Math.Cos(direction) * ACCELERATION
         End If
-        Dim dist As Double = GRAVITY / Math.Max(((((PictureBox1.Top + PictureBox1.Bottom) / 2) - ((PictureBox2.Top + PictureBox2.Bottom) / 2)) ^ 2) + ((((PictureBox1.Right + PictureBox1.Left) / 2) - ((PictureBox2.Right + PictureBox2.Left) / 2)) ^ 2), 0.0001)
-        Dim deg As Double = Math.Atan2((-((PictureBox1.Top + PictureBox1.Bottom) / 2) + ((PictureBox2.Top + PictureBox2.Bottom) / 2)), (((PictureBox1.Right + PictureBox1.Left) / 2) - ((PictureBox2.Right + PictureBox2.Left) / 2)))
-        vy += Math.Sin(deg) * dist
-        vx += Math.Cos(deg) * dist
+        Dim dist As Double = GRAVITY / Math.Max(((((PictureBox1.Top + PictureBox1.Bottom) / 2) - ((PictureBox2.Top + PictureBox2.Bottom) / 2)) ^ 2) + ((((PictureBox1.Right + PictureBox1.Left) / 2) - ((PictureBox2.Right + PictureBox2.Left) / 2)) ^ 2), 1)
+        Dim deg As Double = Math.Atan2((((PictureBox1.Top + PictureBox1.Bottom) / 2) - ((PictureBox2.Top + PictureBox2.Bottom) / 2)), (((PictureBox1.Right + PictureBox1.Left) / 2) - ((PictureBox2.Right + PictureBox2.Left) / 2)))
+        vy -= Math.Sin(deg) * dist
+        vx -= Math.Cos(deg) * dist
         PictureBox1.Top += vy
         PictureBox1.Top = truemod(PictureBox1.Top, Me.Bottom - Me.Top)
         PictureBox1.Left += vx
