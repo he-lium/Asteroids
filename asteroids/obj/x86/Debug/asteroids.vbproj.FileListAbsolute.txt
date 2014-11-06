@@ -16,3 +16,12 @@ H:\asteroids\asteroids\bin\Debug\asteroids.xml
 H:\asteroids\asteroids\obj\x86\Debug\asteroids.Form1.resources
 H:\asteroids\asteroids\obj\x86\Debug\asteroids.Resources.resources
 H:\asteroids\asteroids\obj\x86\Debug\asteroids.vbproj.GenerateResource.Cache
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.exe
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.xml
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.pdb
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\bin\Debug\asteroids.exe
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\bin\Debug\asteroids.pdb
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\bin\Debug\asteroids.xml
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.Form1.resources
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.Resources.resources
+D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.vbproj.GenerateResource.Cache
