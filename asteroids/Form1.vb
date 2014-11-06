@@ -1,12 +1,12 @@
 ﻿Public Class Form1
-    Const NUM_ASTEROIDS As Integer = 1
+    Const NUM_ASTEROIDS As Integer = 0
     Const MAX_SPEED As Integer = 50
     Const ACCELERATION As Double = 0.5
     Const TORQUE As Double = 0.05
     Const MIN_ASTEROID_SPEED As Integer = -20
     Const MAX_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 4000
+    Const GRAVITY As Integer = 9001
 
     Private direction As Double = Math.PI * 0.5
     Private degrees As Integer = 90
