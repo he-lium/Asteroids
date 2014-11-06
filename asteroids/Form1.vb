@@ -6,7 +6,7 @@
     Const MIN_ASTEROID_SPEED As Integer = -20
     Const MAX_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 100000
+    Const GRAVITY As Integer = 10000
 
     Private fps As Integer = 0
     Private direction As Double = Math.PI * 0.5
@@ -113,7 +113,7 @@
         spaceship.y = (spaceship.picture.Top + spaceship.picture.Bottom) / 2
         spaceship.size = 0
         spaceship.vx = 0
-        spaceship.vy = 15
+        spaceship.vy = 7
         Randomize()
         For i = 0 To NUM_ASTEROIDS - 1
             asteroids(i) = make_asteroid(MAX_ASTEROID_SIZE)
