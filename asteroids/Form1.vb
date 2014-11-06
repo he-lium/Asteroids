@@ -55,6 +55,7 @@
         vy -= GRAVITY / Math.Max(((((PictureBox1.Top + PictureBox1.Bottom) / 2) - ((PictureBox2.Top + PictureBox2.Bottom) / 2)) ^ 2), 0.05)
         vx -= GRAVITY / Math.Max(((((PictureBox1.Right + PictureBox1.Left) / 2) - ((PictureBox2.Right + PictureBox2.Left) / 2)) ^ 2), 0.05)
         PictureBox1.Top += vy
+<<<<<<< HEAD
         PictureBox1.Top = truemod(PictureBox1.Top, Me.Bottom - Me.Top)
         PictureBox1.Left += vx
         PictureBox1.Left = truemod(PictureBox1.Left, Me.Right - Me.Left)
@@ -63,6 +64,16 @@
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
+=======
+        PictureBox1.Top = truemod(PictureBox1.Top, Me.Size.Height)
+        PictureBox1.Left += vx
+        PictureBox1.Left = truemod(PictureBox1.Left, Me.Size.Width)
+        vx = vx * 0.98
+        vy = vy * 0.98
+        move_asteroid(asteroids(0))
+        move_asteroid(asteroids(1))
+        move_asteroid(asteroids(2))
+>>>>>>> origin/master
     End Sub
 
     Private Sub move_asteroid(ByVal tmp As asteroid)
