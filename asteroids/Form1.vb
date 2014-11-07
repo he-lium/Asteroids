@@ -32,6 +32,10 @@ Public Class Form1
         Return ((x Mod y) + y) Mod y
     End Function
 
+    Private Function floatmod(ByVal x As Double, ByVal y As Integer) As Double
+        Return ((x Mod y) + y) Mod y
+    End Function
+
     Private Sub Form1_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         If e.KeyCode = Keys.Up Then
             upkey = True
@@ -84,9 +88,9 @@ Public Class Form1
 
     Private Sub move_asteroid(ByRef tmp As asteroid)
         tmp.y += tmp.vy
-        tmp.y = truemod(tmp.y, Me.Bottom - Me.Top)
+        tmp.y = floatmod(tmp.y, Me.Bottom - Me.Top)
         tmp.x += tmp.vx
-        tmp.x = truemod(tmp.x, Me.Right - Me.Left)
+        tmp.x = floatmod(tmp.x, Me.Right - Me.Left)
         tmp.picture.Left = tmp.x - tmp.picture.Width / 2
         tmp.picture.Top = tmp.y - tmp.picture.Height / 2
     End Sub
