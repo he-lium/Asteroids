@@ -25,3 +25,12 @@ D:\My Documents\Computer Science\SDD\Asteroids\asteroids\bin\Debug\asteroids.xml
 D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.Form1.resources
 D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.Resources.resources
 D:\My Documents\Computer Science\SDD\Asteroids\asteroids\obj\x86\Debug\asteroids.vbproj.GenerateResource.Cache
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.exe
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.xml
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.pdb
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\bin\Debug\asteroids.exe
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\bin\Debug\asteroids.pdb
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\bin\Debug\asteroids.xml
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.Form1.resources
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.Resources.resources
+C:\Users\Dominic He\Documents\GitHub\Asteroids\asteroids\obj\x86\Debug\asteroids.vbproj.GenerateResource.Cache

@@ -1,12 +1,15 @@
-﻿Public Class Form1
-    Const NUM_ASTEROIDS As Integer = 10
+﻿Imports System.Drawing.Drawing2D
+Imports System.Drawing.Imaging
+
+Public Class Form1
+    Const NUM_ASTEROIDS As Integer = 0 '10
     Const MAX_SPEED As Integer = 40
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.01
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 50000
+    Const GRAVITY As Integer = 0 '50000
     Const MAX_GRAVITY As Integer = 10
 
     Private fps As Integer = 0
@@ -29,7 +32,7 @@
         Return ((x Mod y) + y) Mod y
     End Function
 
-    Private Sub Form1_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
+    Private Sub Form1_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         If e.KeyCode = Keys.Up Then
             upkey = True
         End If
@@ -42,7 +45,7 @@
     End Sub
 
 
-    Private Sub Timer1_Tick(sender As System.Object, e As System.EventArgs) Handles Timer1.Tick
+    Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
         If leftkey Then
             direction += Math.PI * TORQUE
         End If
@@ -60,6 +63,8 @@
             apply_gravity(asteroids(i), MAX_ASTEROID_SPEED)
         Next
         move_asteroid(spaceship)
+        spaceship.picture.Image = RotateImg(My.Resources.spaceship, Convert.ToSingle(truemod(degrees - 90, 360)))
+        checkCollide()
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
@@ -86,7 +91,7 @@
         tmp.picture.Top = tmp.y - tmp.picture.Height / 2
     End Sub
 
-    Private Sub Form1_KeyUp(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
+    Private Sub Form1_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
         If e.KeyCode = Keys.Up Then
             upkey = False
         End If
@@ -114,7 +119,7 @@
         Return asteroid1
     End Function
 
-    Private Sub Form1_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         spaceship = New asteroid
         spaceship.picture = PictureBox1
         spaceship.x = (spaceship.picture.Right + spaceship.picture.Left) / 2
@@ -128,8 +133,45 @@
         Next
     End Sub
 
-    Private Sub Timer2_Tick(sender As System.Object, e As System.EventArgs) Handles Timer2.Tick
+    Private Sub Timer2_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer2.Tick
         Label2.Text = fps
         fps = 0
+    End Sub
+
+    'Source: the internet, will find later
+    Public Function RotateImg(ByVal bmpimage As Bitmap, ByVal angle As Single) As Bitmap
+        Dim w As Integer = bmpimage.Width
+        Dim h As Integer = bmpimage.Height
+        Dim pf As PixelFormat = Nothing
+        pf = bmpimage.PixelFormat
+        Dim tempImg As New Bitmap(w, h, pf)
+        Dim g As Graphics = Graphics.FromImage(tempImg)
+        g.DrawImageUnscaled(bmpimage, 1, 1)
+        g.Dispose()
+        Dim path As New GraphicsPath()
+        path.AddRectangle(New RectangleF(0.0F, 0.0F, w, h))
+        Dim mtrx As New Matrix()
+        'Using System.Drawing.Drawing2D.Matrix class
+
+        mtrx.Rotate(angle)
+        Dim rct As RectangleF = path.GetBounds(mtrx)
+        Dim newImg As New Bitmap(Convert.ToInt32(rct.Width), Convert.ToInt32(rct.Height), pf)
+        g = Graphics.FromImage(newImg)
+        g.TranslateTransform(-rct.X, -rct.Y)
+        g.RotateTransform(angle)
+        g.InterpolationMode = InterpolationMode.HighQualityBilinear
+        g.DrawImageUnscaled(tempImg, 0, 0)
+        g.Dispose()
+        tempImg.Dispose()
+        Return newImg
+    End Function
+
+    Private Sub checkCollide()
+        If spaceship.x > PictureBox2.Left And spaceship.x < PictureBox2.Left + PictureBox2.Width Then
+            If spaceship.y > PictureBox2.Top And spaceship.y < PictureBox2.Top + PictureBox2.Height Then
+                Timer1.Stop()
+                Timer2.Stop()
+            End If
+        End If
     End Sub
 End Class
