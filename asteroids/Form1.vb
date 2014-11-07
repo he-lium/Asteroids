@@ -1,12 +1,13 @@
 ﻿Public Class Form1
-    Const NUM_ASTEROIDS As Integer = 0
-    Const MAX_SPEED As Integer = 100
-    Const ACCELERATION As Double = 0.5
-    Const TORQUE As Double = 0.05
-    Const MIN_ASTEROID_SPEED As Integer = -20
-    Const MAX_ASTEROID_SPEED As Integer = 20
+    Const NUM_ASTEROIDS As Integer = 10
+    Const MAX_SPEED As Integer = 40
+    Const ACCELERATION As Double = 0.1
+    Const TORQUE As Double = 0.01
+    Const STARTING_ASTEROID_SPEED As Integer = 20
+    Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 10000
+    Const GRAVITY As Integer = 50000
+    Const MAX_GRAVITY As Integer = 10
 
     Private fps As Integer = 0
     Private direction As Double = Math.PI * 0.5
@@ -54,19 +55,26 @@
             spaceship.vy -= Math.Sin(direction) * ACCELERATION
             spaceship.vx += Math.Cos(direction) * ACCELERATION
         End If
-        Dim dist As Double = GRAVITY / Math.Max(((spaceship.y - ((PictureBox2.Top + PictureBox2.Bottom) / 2)) ^ 2) + ((spaceship.x - ((PictureBox2.Right + PictureBox2.Left) / 2)) ^ 2), 1)
-        Dim deg As Double = Math.Atan2((spaceship.y - ((PictureBox2.Top + PictureBox2.Bottom) / 2)), (spaceship.x - ((PictureBox2.Right + PictureBox2.Left) / 2)))
-        spaceship.vy -= Math.Sin(deg) * dist
-        spaceship.vx -= Math.Cos(deg) * dist
-        spaceship.vx = Math.Min(MAX_SPEED, spaceship.vx)
-        spaceship.vy = Math.Min(MAX_SPEED, spaceship.vy)
-        spaceship.vx = Math.Max(-MAX_SPEED, spaceship.vx)
-        spaceship.vy = Math.Max(-MAX_SPEED, spaceship.vy)
+        apply_gravity(spaceship, MAX_SPEED)
+        For i = 0 To NUM_ASTEROIDS - 1
+            apply_gravity(asteroids(i), MAX_ASTEROID_SPEED)
+        Next
         move_asteroid(spaceship)
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
         fps += 1
+    End Sub
+
+    Private Sub apply_gravity(ByRef tmp As asteroid, ByVal maxSpeed As Integer)
+        Dim dist As Double = GRAVITY / Math.Max(((tmp.y - ((PictureBox2.Top + PictureBox2.Bottom) / 2)) ^ 2) + ((tmp.x - ((PictureBox2.Right + PictureBox2.Left) / 2)) ^ 2), MAX_GRAVITY ^ 2)
+        Dim deg As Double = Math.Atan2((tmp.y - ((PictureBox2.Top + PictureBox2.Bottom) / 2)), (tmp.x - ((PictureBox2.Right + PictureBox2.Left) / 2)))
+        tmp.vy -= Math.Sin(deg) * dist
+        tmp.vx -= Math.Cos(deg) * dist
+        tmp.vx = Math.Min(maxSpeed, tmp.vx)
+        tmp.vy = Math.Min(maxSpeed, tmp.vy)
+        tmp.vx = Math.Max(-maxSpeed, tmp.vx)
+        tmp.vy = Math.Max(-maxSpeed, tmp.vy)
     End Sub
 
     Private Sub move_asteroid(ByRef tmp As asteroid)
@@ -92,8 +100,8 @@
 
     Private Function make_asteroid(ByVal size As Integer) As asteroid
         Dim asteroid1 As asteroid = New asteroid
-        asteroid1.vx = Math.Floor(Rnd() * (MAX_ASTEROID_SPEED - MIN_ASTEROID_SPEED)) + MIN_ASTEROID_SPEED
-        asteroid1.vy = Math.Floor(Rnd() * (MAX_ASTEROID_SPEED - MIN_ASTEROID_SPEED)) + MIN_ASTEROID_SPEED
+        asteroid1.vx = Math.Floor(Rnd() * (STARTING_ASTEROID_SPEED + STARTING_ASTEROID_SPEED)) - STARTING_ASTEROID_SPEED
+        asteroid1.vy = Math.Floor(Rnd() * (STARTING_ASTEROID_SPEED + STARTING_ASTEROID_SPEED)) - STARTING_ASTEROID_SPEED
         asteroid1.size = size
         asteroid1.picture = New PictureBox
         asteroid1.picture.BackColor = Color.HotPink
@@ -113,7 +121,7 @@
         spaceship.y = (spaceship.picture.Top + spaceship.picture.Bottom) / 2
         spaceship.size = 0
         spaceship.vx = 0
-        spaceship.vy = -5
+        spaceship.vy = -10
         Randomize()
         For i = 0 To NUM_ASTEROIDS - 1
             asteroids(i) = make_asteroid(MAX_ASTEROID_SIZE)

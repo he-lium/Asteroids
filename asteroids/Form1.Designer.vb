@@ -36,9 +36,9 @@ Partial Class Form1
         'PictureBox1
         '
         Me.PictureBox1.BackColor = System.Drawing.Color.Black
-        Me.PictureBox1.Location = New System.Drawing.Point(1080, 435)
+        Me.PictureBox1.Location = New System.Drawing.Point(1165, 429)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(61, 57)
+        Me.PictureBox1.Size = New System.Drawing.Size(70, 70)
         Me.PictureBox1.TabIndex = 0
         Me.PictureBox1.TabStop = False
         '
