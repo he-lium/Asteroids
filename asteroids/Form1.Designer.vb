@@ -35,10 +35,12 @@ Partial Class Form1
         '
         'PictureBox1
         '
-        Me.PictureBox1.BackColor = System.Drawing.Color.Black
+        Me.PictureBox1.BackColor = System.Drawing.Color.Transparent
+        Me.PictureBox1.Image = Global.asteroids.My.Resources.Resources.spaceship
         Me.PictureBox1.Location = New System.Drawing.Point(1165, 429)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(70, 70)
+        Me.PictureBox1.Size = New System.Drawing.Size(85, 85)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.PictureBox1.TabIndex = 0
         Me.PictureBox1.TabStop = False
         '
@@ -83,7 +85,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1442, 890)
+        Me.ClientSize = New System.Drawing.Size(1370, 772)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.PictureBox2)

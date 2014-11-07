@@ -9,7 +9,7 @@ Public Class Form1
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 0 '50000
+    Const GRAVITY As Integer = 2000 '50000
     Const MAX_GRAVITY As Integer = 10
 
     Private fps As Integer = 0
@@ -64,7 +64,7 @@ Public Class Form1
         Next
         move_asteroid(spaceship)
         spaceship.picture.Image = RotateImg(My.Resources.spaceship, Convert.ToSingle(truemod(degrees - 90, 360)))
-        checkCollide()
+        'checkCollide()
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
