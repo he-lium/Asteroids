@@ -5,11 +5,11 @@ Public Class Form1
     Const NUM_ASTEROIDS As Integer = 0 '10
     Const MAX_SPEED As Integer = 40
     Const ACCELERATION As Double = 0.1
-    Const TORQUE As Double = 0.01
+    Const TORQUE As Double = 0.05
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 2000 '50000
+    Const GRAVITY As Integer = 0 '50000
     Const MAX_GRAVITY As Integer = 10
 
     Private fps As Integer = 0
@@ -63,7 +63,7 @@ Public Class Form1
             apply_gravity(asteroids(i), MAX_ASTEROID_SPEED)
         Next
         move_asteroid(spaceship)
-        spaceship.picture.Image = RotateImg(My.Resources.spaceship, Convert.ToSingle(truemod(degrees - 90, 360)))
+        spaceship.picture.Image = RotateImg(My.Resources.spaceship, Convert.ToSingle(truemod(90 - degrees, 360)))
         'checkCollide()
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
@@ -126,7 +126,7 @@ Public Class Form1
         spaceship.y = (spaceship.picture.Top + spaceship.picture.Bottom) / 2
         spaceship.size = 0
         spaceship.vx = 0
-        spaceship.vy = -10
+        spaceship.vy = 0
         Randomize()
         For i = 0 To NUM_ASTEROIDS - 1
             asteroids(i) = make_asteroid(MAX_ASTEROID_SIZE)
