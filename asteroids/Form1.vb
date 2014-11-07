@@ -3,13 +3,13 @@ Imports System.Drawing.Imaging
 
 Public Class Form1
     Const NUM_ASTEROIDS As Integer = 0 '10
-    Const MAX_SPEED As Integer = 40
+    Const MAX_SPEED As Integer = 30
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.05
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 0 '50000
+    Const GRAVITY As Integer = 10000
     Const MAX_GRAVITY As Integer = 10
 
     Private fps As Integer = 0
