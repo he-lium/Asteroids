@@ -13,7 +13,8 @@ Public Class Form1
     Const MAX_GRAVITY As Integer = 0
     Const MAX_MISSILES As Integer = 7
     Const MISSILE_SIZE As Integer = 7
-    Const MISSILE_COOLDOWN_PEROID As Integer = 333
+    Const MISSILE_COOLDOWN_PEROID As Integer = 333 / 16
+    Const MAX_MISSILE_TIME As Integer = 2400 / 16
 
     Private fps As Integer = 0
     Private direction As Double = Math.PI * 0.5
@@ -22,7 +23,7 @@ Public Class Form1
     Private asteroids(NUM_ASTEROIDS) As asteroid
     Private spaceship As asteroid
     Private missiles(MAX_MISSILES) As asteroid
-    Private missileLanchCooldown As Integer
+    Private missileLanchCooldown As Integer = 0
 
     Private Structure asteroid
         Public x As Double
@@ -95,12 +96,15 @@ Public Class Form1
         move_asteroid(spaceship)
         spaceship.picture.Image = RotateImg(My.Resources.spaceship, Convert.ToSingle(truemod(90 - degrees, 360)))
         checkGravityCollision()
+        UpdateMissiles()
         Label3.Text = "vx: " + FormatNumber(spaceship.vx, 2)
         Label5.Text = "vy: " + FormatNumber(spaceship.vy, 2)
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
         fps += 1
+
+        Label6.Text = missileLanchCooldown
     End Sub
 
     Private Sub apply_gravity(ByRef tmp As asteroid, ByVal maxSpeed As Integer)
@@ -146,7 +150,7 @@ Public Class Form1
         missile1.size = MISSILE_SIZE
 
         missile1.picture = New PictureBox
-        missile1.picture.BackColor = Color.Black
+        missile1.picture.BackColor = Color.Red
         missile1.picture.Size = New Size(MISSILE_SIZE, MISSILE_SIZE)
         missile1.picture.Visible = False
         Me.Controls.Add(missile1.picture)
@@ -223,23 +227,47 @@ Public Class Form1
         If missileLanchCooldown > 0 Then
             missileLanchCooldown = missileLanchCooldown - 1
         End If
-        'MAC
+        'move missiles
         For i = 0 To MAX_MISSILES - 1
             If missiles(i).launchTime > 0 Then
-                If missiles(i).launchTime < 1500 Then
+                If missiles(i).launchTime < MAX_MISSILE_TIME Then
                     'Deactivate missile
                     missiles(i).launchTime = 0
-                    missiles(i).picture.Visible = False
+                    'missiles(i).picture.Visible = False
                 Else
                     'Move missile
                     move_asteroid(missiles(i))
-                    missiles(i).launchTime = missiles(i).launchTime + 1
+                    missiles(i).launchTime = missiles(i).launchTime
+                    missiles(i).picture.Visible = True
                 End If
             End If
         Next
-        If spacekey Then
+        If spacekey = True Then 'And missileLanchCooldown = 0 Then
+            missileLanchCooldown = MISSILE_COOLDOWN_PEROID
+            Dim newMissile = FindInactiveMissile()
+            'Label4.Text = Date.Now.ToString() + "Missile lanched: " + newMissile.ToString()
+            If newMissile <> -1 Then
+                missiles(newMissile).launchTime = 1
+                missiles(newMissile).x = spaceship.x
+                missiles(newMissile).y = spaceship.y
+                missiles(newMissile).vx = spaceship.vx
+                missiles(newMissile).vy = spaceship.vy
+                missiles(newMissile).picture.Left = missiles(newMissile).x - missiles(newMissile).picture.Width / 2
+                missiles(newMissile).picture.Top = missiles(newMissile).y - missiles(newMissile).picture.Height / 2
 
+            End If
         End If
     End Sub
+
+    Private Function FindInactiveMissile() As Integer
+        For i = 1 To MAX_MISSILES - 1
+            If missiles(i).launchTime = 0 Then
+                Label4.Text = i
+                Return i
+            End If
+        Next
+        Return -1
+
+    End Function
 
 End Class
