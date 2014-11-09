@@ -2,22 +2,27 @@
 Imports System.Drawing.Imaging
 
 Public Class Form1
-    Const NUM_ASTEROIDS As Integer = 0 '10
+    Const NUM_ASTEROIDS As Integer = 2 '10
     Const MAX_SPEED As Integer = 15
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.05
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 5000
+    Const GRAVITY As Integer = 0
     Const MAX_GRAVITY As Integer = 0
+    Const MAX_MISSILES As Integer = 7
+    Const MISSILE_SIZE As Integer = 7
+    Const MISSILE_COOLDOWN_PEROID As Integer = 333
 
     Private fps As Integer = 0
     Private direction As Double = Math.PI * 0.5
     Private degrees As Integer = 90
-    Dim upkey = False, leftkey = False, rightkey = False
+    Dim upkey = False, leftkey = False, rightkey = False, spacekey = False
     Private asteroids(NUM_ASTEROIDS) As asteroid
     Private spaceship As asteroid
+    Private missiles(MAX_MISSILES) As asteroid
+    Private missileLanchCooldown As Integer
 
     Private Structure asteroid
         Public x As Double
@@ -26,6 +31,9 @@ Public Class Form1
         Public vy As Double
         Public size As Integer
         Public picture As System.Windows.Forms.PictureBox
+
+        'Missile properties
+        Public launchTime As Integer
     End Structure
 
     Private Function truemod(ByVal x As Integer, ByVal y As Integer) As Integer
@@ -46,15 +54,32 @@ Public Class Form1
         If e.KeyCode = Keys.Right Then
             rightkey = True
         End If
+        If e.KeyCode = Keys.Space Then
+            spacekey = True
+        End If
     End Sub
 
+    Private Sub Form1_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
+        If e.KeyCode = Keys.Up Then
+            upkey = False
+        End If
+        If e.KeyCode = Keys.Left Then
+            leftkey = False
+        End If
+        If e.KeyCode = Keys.Right Then
+            rightkey = False
+        End If
+        If e.KeyCode = Keys.Space Then
+            spacekey = False
+        End If
+    End Sub
 
     Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
         If leftkey Then
             direction += Math.PI * TORQUE / 2
         End If
         If rightkey Then
-            direction -= Math.PI * TORQUE / 2
+            direction += Math.PI * TORQUE / 2
         End If
         degrees = truemod(direction * (180 / Math.PI), 360)
         Label1.Text = degrees
@@ -76,7 +101,6 @@ Public Class Form1
             move_asteroid(asteroids(i))
         Next
         fps += 1
-
     End Sub
 
     Private Sub apply_gravity(ByRef tmp As asteroid, ByVal maxSpeed As Integer)
@@ -99,18 +123,6 @@ Public Class Form1
         tmp.picture.Top = tmp.y - tmp.picture.Height / 2
     End Sub
 
-    Private Sub Form1_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
-        If e.KeyCode = Keys.Up Then
-            upkey = False
-        End If
-        If e.KeyCode = Keys.Left Then
-            leftkey = False
-        End If
-        If e.KeyCode = Keys.Right Then
-            rightkey = False
-        End If
-    End Sub
-
     Private Function make_asteroid(ByVal size As Integer) As asteroid
         Dim asteroid1 As asteroid = New asteroid
         asteroid1.vx = Math.Floor(Rnd() * (STARTING_ASTEROID_SPEED + STARTING_ASTEROID_SPEED)) - STARTING_ASTEROID_SPEED
@@ -127,6 +139,20 @@ Public Class Form1
         Return asteroid1
     End Function
 
+    Private Function make_missile() As asteroid
+        Dim missile1 As New asteroid
+        missile1.vx = 0
+        missile1.vy = 0
+        missile1.size = MISSILE_SIZE
+
+        missile1.picture = New PictureBox
+        missile1.picture.BackColor = Color.Black
+        missile1.picture.Size = New Size(MISSILE_SIZE, MISSILE_SIZE)
+        missile1.picture.Visible = False
+        Me.Controls.Add(missile1.picture)
+        Return missile1
+    End Function
+
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         spaceship = New asteroid
         spaceship.picture = PictureBox1
@@ -138,6 +164,9 @@ Public Class Form1
         Randomize()
         For i = 0 To NUM_ASTEROIDS - 1
             asteroids(i) = make_asteroid(MAX_ASTEROID_SIZE)
+        Next
+        For i = 0 To MAX_MISSILES - 1
+            missiles(i) = make_missile()
         Next
     End Sub
 
@@ -188,4 +217,29 @@ Public Class Form1
             End If
         End If
     End Sub
+
+    Private Sub UpdateMissiles()
+        'Run missile launch cooldown
+        If missileLanchCooldown > 0 Then
+            missileLanchCooldown = missileLanchCooldown - 1
+        End If
+        'MAC
+        For i = 0 To MAX_MISSILES - 1
+            If missiles(i).launchTime > 0 Then
+                If missiles(i).launchTime < 1500 Then
+                    'Deactivate missile
+                    missiles(i).launchTime = 0
+                    missiles(i).picture.Visible = False
+                Else
+                    'Move missile
+                    move_asteroid(missiles(i))
+                    missiles(i).launchTime = missiles(i).launchTime + 1
+                End If
+            End If
+        Next
+        If spacekey Then
+
+        End If
+    End Sub
+
 End Class
