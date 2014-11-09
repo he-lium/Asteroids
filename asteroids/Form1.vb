@@ -3,13 +3,13 @@ Imports System.Drawing.Imaging
 
 Public Class Form1
     Const NUM_ASTEROIDS As Integer = 0 '10
-    Const MAX_SPEED As Integer = 30
+    Const MAX_SPEED As Integer = 15
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.05
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 10000
+    Const GRAVITY As Integer = 5000
     Const MAX_GRAVITY As Integer = 10
 
     Private fps As Integer = 0
@@ -51,10 +51,10 @@ Public Class Form1
 
     Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
         If leftkey Then
-            direction += Math.PI * TORQUE
+            direction += Math.PI * TORQUE / 2
         End If
         If rightkey Then
-            direction -= Math.PI * TORQUE
+            direction -= Math.PI * TORQUE / 2
         End If
         degrees = truemod(direction * (180 / Math.PI), 360)
         Label1.Text = degrees
