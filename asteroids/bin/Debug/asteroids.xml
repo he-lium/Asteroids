@@ -15,6 +15,10 @@ asteroids
   Overrides the current thread's CurrentUICulture property for all
   resource lookups using this strongly typed resource class.
 </summary>
+</member><member name="P:asteroids.My.Resources.Resources.dc87Bnkoi1">
+	<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
 </member><member name="P:asteroids.My.Resources.Resources.spaceship">
 	<summary>
   Looks up a localized resource of type System.Drawing.Bitmap.
