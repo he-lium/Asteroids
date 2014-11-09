@@ -10,7 +10,7 @@ Public Class Form1
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
     Const GRAVITY As Integer = 5000
-    Const MAX_GRAVITY As Integer = 10
+    Const MAX_GRAVITY As Integer = 0
 
     Private fps As Integer = 0
     Private direction As Double = Math.PI * 0.5
@@ -62,17 +62,21 @@ Public Class Form1
             spaceship.vy -= Math.Sin(direction) * ACCELERATION
             spaceship.vx += Math.Cos(direction) * ACCELERATION
         End If
+
         apply_gravity(spaceship, MAX_SPEED)
         For i = 0 To NUM_ASTEROIDS - 1
             apply_gravity(asteroids(i), MAX_ASTEROID_SPEED)
         Next
         move_asteroid(spaceship)
         spaceship.picture.Image = RotateImg(My.Resources.spaceship, Convert.ToSingle(truemod(90 - degrees, 360)))
-        'checkCollide()
+        checkGravityCollision()
+        Label3.Text = "vx: " + FormatNumber(spaceship.vx, 2)
+        Label5.Text = "vy: " + FormatNumber(spaceship.vy, 2)
         For i = 0 To NUM_ASTEROIDS - 1
             move_asteroid(asteroids(i))
         Next
         fps += 1
+
     End Sub
 
     Private Sub apply_gravity(ByRef tmp As asteroid, ByVal maxSpeed As Integer)
@@ -170,11 +174,17 @@ Public Class Form1
         Return newImg
     End Function
 
-    Private Sub checkCollide()
-        If spaceship.x > PictureBox2.Left And spaceship.x < PictureBox2.Left + PictureBox2.Width Then
-            If spaceship.y > PictureBox2.Top And spaceship.y < PictureBox2.Top + PictureBox2.Height Then
-                Timer1.Stop()
-                Timer2.Stop()
+    Private Sub checkGravityCollision()
+        If spaceship.x > PictureBox2.Left + 20 And spaceship.x < PictureBox2.Left + PictureBox2.Width - 20 Then
+            If spaceship.y > PictureBox2.Top + 20 And spaceship.y < PictureBox2.Top + PictureBox2.Height - 20 Then
+                If spaceship.vx > 14 Or spaceship.vy > 14 Then
+                    'Timer1.Stop()
+                    'Timer2.Stop()
+                    Label4.Text = "fell into gravity well"
+                    PictureBox2.BackColor = Color.Red
+                    'End If
+                End If
+
             End If
         End If
     End Sub
