@@ -3,5 +3,5 @@ Asteroids
 
 SSD Minor Project
 
-Kevin Ni
+Kevin Ni,
 Dominic He
