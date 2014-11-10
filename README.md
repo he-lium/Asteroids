@@ -1,7 +1,8 @@
 Asteroids
 =========
 
-SSD Minor Project
+SDD Minor Project
 
 Kevin Ni,
+
 Dominic He
