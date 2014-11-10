@@ -3,7 +3,7 @@ Imports System.Drawing.Imaging
 
 Public Class Form1
     Const NUM_ASTEROIDS As Integer = 0 '10
-    Const MAX_SPEED As Integer = 15
+    Const MAX_SPEED As Integer = 20
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.03
     Const STARTING_ASTEROID_SPEED As Integer = 20
@@ -16,6 +16,7 @@ Public Class Form1
     Const MISSILE_COOLDOWN_PEROID As Integer = 150 / 16
     Const MAX_MISSILE_TIME As Integer = 1300 / 16
     Const MISSILE_SPEED As Integer = 8
+    Const MAX_MISSILE_SPEED As Integer = 30
 
     Private fps As Integer = 0
     Private direction As Double = Math.PI * 0.5
@@ -95,14 +96,14 @@ Public Class Form1
             apply_gravity(asteroids(i), MAX_ASTEROID_SPEED)
         Next
         move_asteroid(spaceship)
+        For i = 0 To NUM_ASTEROIDS - 1
+            move_asteroid(asteroids(i))
+        Next
         spaceship.picture.Image = RotateImg(My.Resources.spaceship, Convert.ToSingle(truemod(90 - degrees, 360)))
         checkGravityCollision()
         UpdateMissiles()
         Label3.Text = "vx: " + FormatNumber(spaceship.vx, 2)
         Label5.Text = "vy: " + FormatNumber(spaceship.vy, 2)
-        For i = 0 To NUM_ASTEROIDS - 1
-            move_asteroid(asteroids(i))
-        Next
         fps += 1
 
         Label6.Text = missileLanchCooldown
@@ -238,6 +239,7 @@ Public Class Form1
                     missiles(i).picture.Visible = False
                 Else
                     'Move missile
+                    apply_gravity(missiles(i), MAX_MISSILE_SPEED)
                     move_asteroid(missiles(i))
                     missiles(i).launchTime = missiles(i).launchTime + 1
                     missiles(i).picture.Visible = True
