@@ -11,9 +11,9 @@ Public Class Form1
     Const MAX_ASTEROID_SIZE As Integer = 100
     Const GRAVITY As Integer = 8000
     Const MAX_GRAVITY As Integer = 10
-    Const MAX_MISSILES As Integer = 7
+    Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
-    Const MISSILE_COOLDOWN_PEROID As Integer = 150 / 16
+    Const MISSILE_COOLDOWN_PEROID As Integer = 500 / 16
     Const MAX_MISSILE_TIME As Integer = 1300 / 16
     Const MISSILE_SPEED As Integer = 8
     Const MAX_MISSILE_SPEED As Integer = 30
