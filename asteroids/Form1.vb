@@ -9,12 +9,12 @@ Public Class Form1
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 4500
+    Const GRAVITY As Integer = 8000
     Const MAX_GRAVITY As Integer = 10
     Const MAX_MISSILES As Integer = 7
     Const MISSILE_SIZE As Integer = 7
-    Const MISSILE_COOLDOWN_PEROID As Integer = 100 / 16
-    Const MAX_MISSILE_TIME As Integer = 1000 / 16
+    Const MISSILE_COOLDOWN_PEROID As Integer = 150 / 16
+    Const MAX_MISSILE_TIME As Integer = 1300 / 16
     Const MISSILE_SPEED As Integer = 8
 
     Private fps As Integer = 0
@@ -244,6 +244,7 @@ Public Class Form1
                 End If
             End If
         Next
+        'Launch missiles
         If spacekey = True And missileLanchCooldown = 0 Then
             missileLanchCooldown = MISSILE_COOLDOWN_PEROID
             Dim newMissile = FindInactiveMissile()
