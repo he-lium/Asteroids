@@ -41,9 +41,10 @@ Public Class GDI
     Dim rightKey As Boolean = False
     Dim spaceKey As Boolean = False
     Dim fps As Integer = 0
-    Dim gravityX As Integer = Me.Width / 4
-    Dim gravityY As Integer = Me.Width / 4
+    Dim gravityX As Integer
+    Dim gravityY As Integer
 
+    Dim g As Graphics
     Dim imgSpaceship As Bitmap
 
     Private Function truemod(ByVal x As Integer, ByVal y As Integer) As Integer
@@ -68,6 +69,8 @@ Public Class GDI
         For i = 0 To MAX_MISSILES - 1
             missiles(i) = make_missile()
         Next
+        gravityX = picGravity.Left + picGravity.Width / 2
+        gravityY = picGravity.Top + picGravity.Height / 2
     End Sub
 
     Private Function make_asteroid(ByVal MAX_ASTEROID_SIZE As Integer) As SpaceObject
@@ -130,6 +133,7 @@ Public Class GDI
             ApplyGravity(asteroids(i), MAX_ASTEROID_SPEED)
             MoveObject(asteroids(i))
         Next
+        checkGravityCollision()
         UpdateMissiles()
         fps += 1
         'Debugging outputs
@@ -210,7 +214,7 @@ Public Class GDI
     Protected Overrides Sub OnPaint(ByVal e As System.Windows.Forms.PaintEventArgs)
         MyBase.OnPaint(e)
         Dim g As Graphics = e.Graphics
-        g.Clear(Color.White)
+        'g.Clear(Color.White)
         imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
         g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
     End Sub
@@ -242,4 +246,11 @@ Public Class GDI
         tempImg.Dispose()
         Return newImg
     End Function
+
+    Private Sub checkGravityCollision()
+        Dim distance = Math.Sqrt((spaceship.x - gravityX) ^ 2 + (spaceship.y - gravityY) ^ 2)
+        If distance < 15 Then
+            lblUpdates.Text = "fell into gravity well"
+        End If
+    End Sub
 End Class

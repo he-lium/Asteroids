@@ -30,6 +30,7 @@ Partial Class GDI
         Me.picGravity = New System.Windows.Forms.PictureBox()
         Me.lblVx = New System.Windows.Forms.Label()
         Me.lblVy = New System.Windows.Forms.Label()
+        Me.lblUpdates = New System.Windows.Forms.Label()
         CType(Me.picGravity, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -65,9 +66,9 @@ Partial Class GDI
         '
         Me.picGravity.BackColor = System.Drawing.Color.Transparent
         Me.picGravity.Image = Global.asteroids.My.Resources.Resources.gravity_well
-        Me.picGravity.Location = New System.Drawing.Point(58, 53)
+        Me.picGravity.Location = New System.Drawing.Point(69, 57)
         Me.picGravity.Name = "picGravity"
-        Me.picGravity.Size = New System.Drawing.Size(428, 366)
+        Me.picGravity.Size = New System.Drawing.Size(360, 360)
         Me.picGravity.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.picGravity.TabIndex = 2
         Me.picGravity.TabStop = False
@@ -90,18 +91,27 @@ Partial Class GDI
         Me.lblVy.TabIndex = 4
         Me.lblVy.Text = "vy"
         '
+        'lblUpdates
+        '
+        Me.lblUpdates.AutoSize = True
+        Me.lblUpdates.Location = New System.Drawing.Point(12, 119)
+        Me.lblUpdates.Name = "lblUpdates"
+        Me.lblUpdates.Size = New System.Drawing.Size(22, 13)
+        Me.lblUpdates.TabIndex = 5
+        Me.lblUpdates.Text = "....."
+        '
         'GDI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1068, 656)
+        Me.Controls.Add(Me.lblUpdates)
         Me.Controls.Add(Me.lblVy)
         Me.Controls.Add(Me.lblVx)
         Me.Controls.Add(Me.picGravity)
         Me.Controls.Add(Me.lblDegrees)
         Me.Controls.Add(Me.lblFPS)
-        Me.DoubleBuffered = True
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MaximizeBox = False
         Me.Name = "GDI"
@@ -119,4 +129,5 @@ Partial Class GDI
     Friend WithEvents picGravity As System.Windows.Forms.PictureBox
     Friend WithEvents lblVx As System.Windows.Forms.Label
     Friend WithEvents lblVy As System.Windows.Forms.Label
+    Friend WithEvents lblUpdates As System.Windows.Forms.Label
 End Class
