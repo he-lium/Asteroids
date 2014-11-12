@@ -9,7 +9,7 @@ Public Class Form1
     Const STARTING_ASTEROID_SPEED As Integer = 20
     Const MAX_ASTEROID_SPEED As Integer = 40
     Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 8000
+    Const GRAVITY As Integer = 0
     Const MAX_GRAVITY As Integer = 10
     Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
