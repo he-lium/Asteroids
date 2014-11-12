@@ -15,7 +15,7 @@ End Structure
 
 Public Class GDI
     Const NUM_ASTEROIDS As Integer = 10
-    Const MAX_SPEED As Integer = 20
+    Const MAX_SPEED As Integer = 17
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.03
     Const STARTING_ASTEROID_SPEED As Integer = 20
@@ -119,7 +119,6 @@ Public Class GDI
             direction -= Math.PI * TORQUE
         End If
         degrees = truemod(direction * (180 / Math.PI), 360)
-        Label2.Text = degrees
         If upKey Then
             spaceship.vy -= Math.Sin(direction) * ACCELERATION
             spaceship.vx += Math.Cos(direction) * ACCELERATION
@@ -133,6 +132,10 @@ Public Class GDI
         Next
         UpdateMissiles()
         fps += 1
+        'Debugging outputs
+        lblDegrees.Text = degrees.ToString() + "°"
+        lblVx.Text = "vx: " + FormatNumber(spaceship.vx, 2)
+        lblVy.Text = "vy: " + FormatNumber(spaceship.vy, 2)
         'Draw graphics
         Me.Refresh()
     End Sub
@@ -200,7 +203,7 @@ Public Class GDI
     End Function
 
     Private Sub fpsTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles fpsTimer.Tick
-        Label1.Text = fps.ToString()
+        lblFPS.Text = fps.ToString() + "fps"
         fps = 0
     End Sub
 
