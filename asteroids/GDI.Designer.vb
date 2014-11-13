@@ -66,7 +66,7 @@ Partial Class GDI
         '
         Me.picGravity.BackColor = System.Drawing.Color.Transparent
         Me.picGravity.Image = Global.asteroids.My.Resources.Resources.gravity_well
-        Me.picGravity.Location = New System.Drawing.Point(69, 57)
+        Me.picGravity.Location = New System.Drawing.Point(563, 257)
         Me.picGravity.Name = "picGravity"
         Me.picGravity.Size = New System.Drawing.Size(360, 360)
         Me.picGravity.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -112,6 +112,7 @@ Partial Class GDI
         Me.Controls.Add(Me.picGravity)
         Me.Controls.Add(Me.lblDegrees)
         Me.Controls.Add(Me.lblFPS)
+        Me.DoubleBuffered = True
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MaximizeBox = False
         Me.Name = "GDI"

@@ -14,18 +14,18 @@ Structure SpaceObject
 End Structure
 
 Public Class GDI
-    Const NUM_ASTEROIDS As Integer = 10
+    Const NUM_ASTEROIDS As Integer = 100
     Const MAX_SPEED As Integer = 17
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.03
-    Const STARTING_ASTEROID_SPEED As Integer = 20
-    Const MAX_ASTEROID_SPEED As Integer = 40
-    Const MAX_ASTEROID_SIZE As Integer = 100
-    Const GRAVITY As Integer = 8000
+    Const STARTING_ASTEROID_SPEED As Integer = 17
+    Const MAX_ASTEROID_SPEED As Integer = 17
+    Const MAX_ASTEROID_SIZE As Integer = 3
+    Const GRAVITY As Integer = 7000
     Const MAX_GRAVITY As Integer = 10
     Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
-    Const MISSILE_COOLDOWN_PEROID As Integer = 500 / 16
+    Const MISSILE_COOLDOWN_PEROID As Integer = 150 / 16
     Const MAX_MISSILE_TIME As Integer = 1300 / 16
     Const MISSILE_SPEED As Integer = 8
     Const MAX_MISSILE_SPEED As Integer = 30
@@ -43,7 +43,7 @@ Public Class GDI
     Dim fps As Integer = 0
     Dim gravityX As Integer
     Dim gravityY As Integer
-
+    Dim r As Random
     Dim g As Graphics
     Dim imgSpaceship As Bitmap
 
@@ -56,25 +56,32 @@ Public Class GDI
     End Function
 
     Private Sub GDI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        r = New Random()
         'New spaceship, center of screen, zero velocity
         spaceship = New SpaceObject
-        spaceship.x = Me.Width / 2
-        spaceship.y = Me.Height / 2
+        spaceship.x = 0
+        spaceship.y = 0
         spaceship.vx = 0
         spaceship.vy = 0
         Randomize()
-        For i = 0 To NUM_ASTEROIDS - 1
-            'asteroids.Add(make_asteroid(MAX_ASTEROID_SIZE))
+        For i = 0 To NUM_ASTEROIDS
+            asteroids.Add(make_asteroid(MAX_ASTEROID_SIZE))
         Next
-        For i = 0 To MAX_MISSILES - 1
+        For i = 0 To MAX_MISSILES
             missiles(i) = make_missile()
         Next
         gravityX = picGravity.Left + picGravity.Width / 2
         gravityY = picGravity.Top + picGravity.Height / 2
     End Sub
 
-    Private Function make_asteroid(ByVal MAX_ASTEROID_SIZE As Integer) As SpaceObject
-        Throw New NotImplementedException
+    Private Function make_asteroid(ByVal size As Integer) As SpaceObject
+        Dim asteroid As SpaceObject = New SpaceObject
+        asteroid.vx = r.NextDouble() * STARTING_ASTEROID_SPEED
+        asteroid.vy = r.NextDouble() * STARTING_ASTEROID_SPEED
+        asteroid.size = size
+        asteroid.x = r.Next(Me.Width)
+        asteroid.y = r.Next(Me.Height)
+        Return asteroid
     End Function
 
     Private Function make_missile() As SpaceObject
@@ -127,10 +134,10 @@ Public Class GDI
             spaceship.vx += Math.Cos(direction) * ACCELERATION
         End If
         'Move objects
-        ApplyGravity(spaceship, MAX_SPEED)
+        ApplyGravity(spaceship, MAX_SPEED, 1)
         MoveObject(spaceship)
         For i = 0 To asteroids.Count - 1
-            ApplyGravity(asteroids(i), MAX_ASTEROID_SPEED)
+            ApplyGravity(asteroids(i), MAX_ASTEROID_SPEED, 0.3)
             MoveObject(asteroids(i))
         Next
         checkGravityCollision()
@@ -141,12 +148,12 @@ Public Class GDI
         lblVx.Text = "vx: " + FormatNumber(spaceship.vx, 2)
         lblVy.Text = "vy: " + FormatNumber(spaceship.vy, 2)
         'Draw graphics
-        Me.Refresh()
+        Me.Invalidate()
     End Sub
 
-    Private Sub ApplyGravity(ByRef obj As SpaceObject, ByVal maxSpeed As Integer)
+    Private Sub ApplyGravity(ByRef obj As SpaceObject, ByVal maxSpeed As Integer, ByVal strength As Single)
         'disturbingly long lines
-        Dim dist As Double = GRAVITY / Math.Max(((obj.y - ((picGravity.Top + picGravity.Bottom) / 2)) ^ 2) + ((obj.x - ((picGravity.Right + picGravity.Left) / 2)) ^ 2), MAX_GRAVITY ^ 2)
+        Dim dist As Double = GRAVITY * strength / Math.Max(((obj.y - ((picGravity.Top + picGravity.Bottom) / 2)) ^ 2) + ((obj.x - ((picGravity.Right + picGravity.Left) / 2)) ^ 2), MAX_GRAVITY ^ 2)
         'Label1.Text = dist
         Dim deg As Double = Math.Atan2((obj.y - ((picGravity.Top + picGravity.Bottom) / 2)), (obj.x - ((picGravity.Right + picGravity.Left) / 2)))
         obj.vy -= Math.Sin(deg) * dist
@@ -170,14 +177,14 @@ Public Class GDI
             missileLaunchCooldown = missileLaunchCooldown - 1
         End If
         'Move missiles
-        For i = 0 To MAX_MISSILES - 1
+        For i = 0 To MAX_MISSILES
             If missiles(i).launchTime > 0 Then
                 If missiles(i).launchTime > MAX_MISSILE_TIME Then
                     'Deactivate missile
                     missiles(i).launchTime = 0
                 Else
                     'Move missile
-                    ApplyGravity(missiles(i), MAX_MISSILE_SPEED)
+                    ApplyGravity(missiles(i), MAX_MISSILE_SPEED, 0.75)
                     MoveObject(missiles(i))
                     missiles(i).launchTime = missiles(i).launchTime + 1
                 End If
@@ -194,11 +201,12 @@ Public Class GDI
                 missiles(newMissile).vx = spaceship.vx + Math.Cos(direction) * MISSILE_SPEED
                 missiles(newMissile).vy = spaceship.vy - Math.Sin(direction) * MISSILE_SPEED
             End If
+            lblUpdates.Text = "Launched Missile " + newMissile.ToString()
         End If
     End Sub
 
     Private Function FindInactiveMissile() As Integer
-        For i = 1 To MAX_MISSILES - 1
+        For i = 1 To MAX_MISSILES
             If missiles(i).launchTime = 0 Then
                 Return i
             End If
@@ -209,14 +217,6 @@ Public Class GDI
     Private Sub fpsTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles fpsTimer.Tick
         lblFPS.Text = fps.ToString() + "fps"
         fps = 0
-    End Sub
-
-    Protected Overrides Sub OnPaint(ByVal e As System.Windows.Forms.PaintEventArgs)
-        MyBase.OnPaint(e)
-        Dim g As Graphics = e.Graphics
-        'g.Clear(Color.White)
-        imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
-        g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
     End Sub
 
     'Source: the internet, will find later
@@ -251,6 +251,30 @@ Public Class GDI
         Dim distance = Math.Sqrt((spaceship.x - gravityX) ^ 2 + (spaceship.y - gravityY) ^ 2)
         If distance < 15 Then
             lblUpdates.Text = "fell into gravity well"
+            'fpsTimer.Stop()
+            'updateTimer.Stop()
         End If
+    End Sub
+
+    Private Sub GDI_Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles Me.Paint
+        Dim g As Graphics = e.Graphics
+        imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
+        g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
+        imgSpaceship.Dispose()
+        'Draw Missiles
+        Dim asteroidBrush As New SolidBrush(Color.Red)
+        Dim imgAsteroid As Rectangle
+        For i = 0 To asteroids.Count - 1
+            imgAsteroid = New Rectangle(asteroids(i).x - 25, asteroids(i).y - 25, 50, 50)
+            g.FillRectangle(asteroidBrush, imgAsteroid)
+        Next
+        asteroidBrush.Dispose()
+        Dim missileBrush As New SolidBrush(Color.Black)
+        For i = 0 To MAX_MISSILES
+            If missiles(i).launchTime > 0 Then
+                g.FillEllipse(missileBrush, New Rectangle(missiles(i).x, missiles(i).y, 10, 10))
+            End If
+        Next
+        missileBrush.Dispose()
     End Sub
 End Class
