@@ -14,14 +14,14 @@ Structure SpaceObject
 End Structure
 
 Public Class GDI
-    Const NUM_ASTEROIDS As Integer = 100
-    Const MAX_SPEED As Integer = 17
+    Const NUM_ASTEROIDS As Integer = 3
+    Const MAX_SPEED As Integer = 14
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.03
-    Const STARTING_ASTEROID_SPEED As Integer = 17
-    Const MAX_ASTEROID_SPEED As Integer = 17
+    Const STARTING_ASTEROID_SPEED As Integer = 9
+    Const MAX_ASTEROID_SPEED As Integer = 10
     Const MAX_ASTEROID_SIZE As Integer = 3
-    Const GRAVITY As Integer = 7000
+    Const GRAVITY As Integer = 9000
     Const MAX_GRAVITY As Integer = 10
     Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
@@ -64,7 +64,7 @@ Public Class GDI
         spaceship.vx = 0
         spaceship.vy = 0
         Randomize()
-        For i = 0 To NUM_ASTEROIDS
+        For i = 1 To NUM_ASTEROIDS
             asteroids.Add(make_asteroid(MAX_ASTEROID_SIZE))
         Next
         For i = 0 To MAX_MISSILES
@@ -137,10 +137,12 @@ Public Class GDI
         ApplyGravity(spaceship, MAX_SPEED, 1)
         MoveObject(spaceship)
         For i = 0 To asteroids.Count - 1
-            ApplyGravity(asteroids(i), MAX_ASTEROID_SPEED, 0.3)
+            ApplyGravity(asteroids(i), MAX_ASTEROID_SPEED, 0.25)
             MoveObject(asteroids(i))
         Next
-        checkGravityCollision()
+        If GRAVITY > 0 Then
+            checkGravityCollision()
+        End If
         UpdateMissiles()
         fps += 1
         'Debugging outputs
@@ -258,10 +260,8 @@ Public Class GDI
 
     Private Sub GDI_Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles Me.Paint
         Dim g As Graphics = e.Graphics
-        imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
-        g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
-        imgSpaceship.Dispose()
-        'Draw Missiles
+        g.SmoothingMode = SmoothingMode.HighSpeed
+        'Draw asteroids
         Dim asteroidBrush As New SolidBrush(Color.Red)
         Dim imgAsteroid As Rectangle
         For i = 0 To asteroids.Count - 1
@@ -269,6 +269,11 @@ Public Class GDI
             g.FillRectangle(asteroidBrush, imgAsteroid)
         Next
         asteroidBrush.Dispose()
+        'Draw spaceship
+        imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
+        g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
+        imgSpaceship.Dispose()
+        'Draw missiles
         Dim missileBrush As New SolidBrush(Color.Black)
         For i = 0 To MAX_MISSILES
             If missiles(i).launchTime > 0 Then
