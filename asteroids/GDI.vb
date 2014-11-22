@@ -32,7 +32,7 @@ Public Class GDI
     Const MAX_MISSILE_TIME As Integer = 1300 / 16
     Const MISSILE_SPEED As Integer = 8
     Const MAX_MISSILE_SPEED As Integer = 30
-    Const EXPEL_DISTANCE As Integer = 1000
+    Const EXPEL_DISTANCE As Integer = 50
     Const COLLISION_DISTANCE As Integer = 15
 
     Dim spaceship As SpaceObject
