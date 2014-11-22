@@ -32,6 +32,8 @@ Public Class GDI
     Const MAX_MISSILE_TIME As Integer = 1300 / 16
     Const MISSILE_SPEED As Integer = 8
     Const MAX_MISSILE_SPEED As Integer = 30
+    Const EXPEL_DISTANCE As Integer = 1000
+    Const COLLISION_DISTANCE As Integer = 15
 
     Dim spaceship As SpaceObject
     Dim direction As Double = Math.PI * 0.5
@@ -166,20 +168,18 @@ Public Class GDI
         If obj.expelMode = True Then
             strength = 0
         End If
-
-        'disturbingly long lines
-        Dim dist As Double = GRAVITY * strength / Math.Max(((obj.y - ((picGravity.Top + picGravity.Bottom) / 2)) ^ 2) + ((obj.x - ((picGravity.Right + picGravity.Left) / 2)) ^ 2), MAX_GRAVITY ^ 2)
-        'Label1.Text = dist
-        Dim deg As Double = Math.Atan2((obj.y - ((picGravity.Top + picGravity.Bottom) / 2)), (obj.x - ((picGravity.Right + picGravity.Left) / 2)))
-        obj.vy -= Math.Sin(deg) * dist
-        obj.vx -= Math.Cos(deg) * dist
+        Dim distance As Double = (obj.x - gravityX) ^ 2 + (obj.y - gravityY) ^ 2
+        Dim force As Double = GRAVITY * strength / Math.Max(distance, MAX_GRAVITY ^ 2)
+        distance = Math.Sqrt(distance)
+        Dim rise As Double = (obj.y - ((picGravity.Top + picGravity.Bottom) / 2))
+        Dim run As Double = (obj.x - ((picGravity.Right + picGravity.Left) / 2))
+        obj.vy -= (rise / distance) * force
+        obj.vx -= (run / distance) * force
         obj.vx = Math.Min(maxSpeed, obj.vx)
         obj.vy = Math.Min(maxSpeed, obj.vy)
         obj.vx = Math.Max(-maxSpeed, obj.vx)
         obj.vy = Math.Max(-maxSpeed, obj.vy)
-
-        Dim distance = Math.Sqrt((obj.x - gravityX) ^ 2 + (obj.y - gravityY) ^ 2)
-        If distance > 1000 Then
+        If distance > EXPEL_DISTANCE Then
             obj.expelMode = False
         End If
     End Sub
@@ -268,8 +268,8 @@ Public Class GDI
     End Function
 
     Private Function checkGravityCollision(ByVal obj As SpaceObject) As Boolean
-        Dim distance = Math.Sqrt((obj.x - gravityX) ^ 2 + (obj.y - gravityY) ^ 2)
-        If distance < 15 Then
+        Dim distance = (obj.x - gravityX) ^ 2 + (obj.y - gravityY) ^ 2
+        If distance < COLLISION_DISTANCE ^ 2 Then
             Return True
         Else
             Return False
