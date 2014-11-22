@@ -10,6 +10,7 @@ Structure SpaceObject
     'Asteroid property
     Public size As Integer
     Public type As Integer
+    Public expelMode As Boolean
     'Missile property
     Public launchTime As Integer
 End Structure
@@ -19,8 +20,9 @@ Public Class GDI
     Const MAX_SPEED As Integer = 14
     Const ACCELERATION As Double = 0.1
     Const TORQUE As Double = 0.03
-    Const STARTING_ASTEROID_SPEED As Integer = 9
+    Const STARTING_ASTEROID_SPEED As Integer = 7
     Const MAX_ASTEROID_SPEED As Integer = 10
+    Const ASTEROID_EXPEL_SPEED As Integer = 18
     Const MAX_ASTEROID_SIZE As Integer = 3
     Const GRAVITY As Integer = 9000
     Const MAX_GRAVITY As Integer = 10
@@ -65,7 +67,7 @@ Public Class GDI
         spaceship.vx = 0
         spaceship.vy = 0
         Randomize()
-        For i = 1 To NUM_ASTEROIDS
+        For i = 0 To NUM_ASTEROIDS - 1
             asteroids.Add(make_asteroid(MAX_ASTEROID_SIZE))
         Next
         For i = 0 To MAX_MISSILES
@@ -80,6 +82,7 @@ Public Class GDI
         asteroid.vx = r.NextDouble() * STARTING_ASTEROID_SPEED * 2 - STARTING_ASTEROID_SPEED
         asteroid.vy = r.NextDouble() * STARTING_ASTEROID_SPEED * 2 - STARTING_ASTEROID_SPEED
         asteroid.size = size
+        asteroid.expelMode = False
         asteroid.x = r.Next(Me.Width)
         asteroid.y = r.Next(Me.Height)
         Return asteroid
@@ -142,7 +145,12 @@ Public Class GDI
             MoveObject(asteroids(i))
         Next
         If GRAVITY > 0 Then
-            checkGravityCollision()
+            If checkGravityCollision(spaceship) = True Then
+                lblUpdates.Text = "Fell into gravity well"
+            End If
+            For i = 0 To asteroids.Count - 1
+                expel(asteroids(i))
+            Next
         End If
         UpdateMissiles()
         fps += 1
@@ -155,6 +163,10 @@ Public Class GDI
     End Sub
 
     Private Sub ApplyGravity(ByRef obj As SpaceObject, ByVal maxSpeed As Integer, ByVal strength As Single)
+        If obj.expelMode = True Then
+            strength = 0
+        End If
+
         'disturbingly long lines
         Dim dist As Double = GRAVITY * strength / Math.Max(((obj.y - ((picGravity.Top + picGravity.Bottom) / 2)) ^ 2) + ((obj.x - ((picGravity.Right + picGravity.Left) / 2)) ^ 2), MAX_GRAVITY ^ 2)
         'Label1.Text = dist
@@ -165,6 +177,11 @@ Public Class GDI
         obj.vy = Math.Min(maxSpeed, obj.vy)
         obj.vx = Math.Max(-maxSpeed, obj.vx)
         obj.vy = Math.Max(-maxSpeed, obj.vy)
+
+        Dim distance = Math.Sqrt((obj.x - gravityX) ^ 2 + (obj.y - gravityY) ^ 2)
+        If distance > 1000 Then
+            obj.expelMode = False
+        End If
     End Sub
 
     Private Sub MoveObject(ByRef obj As SpaceObject)
@@ -250,14 +267,14 @@ Public Class GDI
         Return newImg
     End Function
 
-    Private Sub checkGravityCollision()
-        Dim distance = Math.Sqrt((spaceship.x - gravityX) ^ 2 + (spaceship.y - gravityY) ^ 2)
+    Private Function checkGravityCollision(ByVal obj As SpaceObject) As Boolean
+        Dim distance = Math.Sqrt((obj.x - gravityX) ^ 2 + (obj.y - gravityY) ^ 2)
         If distance < 15 Then
-            lblUpdates.Text = "fell into gravity well"
-            'fpsTimer.Stop()
-            'updateTimer.Stop()
+            Return True
+        Else
+            Return False
         End If
-    End Sub
+    End Function
 
     Private Sub GDI_Paint(ByVal sender As Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles Me.Paint
         Dim g As Graphics = e.Graphics
@@ -282,14 +299,16 @@ Public Class GDI
             End If
         Next
         missileBrush.Dispose()
-        'TEST
-        Dim myPointArray As Point() = _
-           {New Point(0, 0), New Point(50, 30), New Point(30, 60)}
-        'g.DrawPolygon(myPen, myPointArray)
-        g.FillPolygon(asteroidBrush, myPointArray)
     End Sub
 
     Private Sub UpdateAsteroidPoints(ByRef asteroid As SpaceObject)
 
     End Sub
+
+    Private Sub expel(ByRef obj As SpaceObject)
+        If checkGravityCollision(obj) Then
+            obj.expelMode = True
+        End If
+    End Sub
+
 End Class
