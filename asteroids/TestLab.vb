@@ -38,5 +38,6 @@ Public Class TestLab
         If asteroid.Count > 0 Then
             g.DrawLine(p, asteroid(asteroid.Count - 1), mouseLocation)
         End If
+        g.DrawEllipse(Pens.Black, New Rectangle(asteroidXY.X - 3, asteroidXY.Y - 3, 6, 6))
     End Sub
 End Class

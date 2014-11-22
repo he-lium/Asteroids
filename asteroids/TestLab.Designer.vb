@@ -50,6 +50,7 @@ Partial Class TestLab
         Me.ClientSize = New System.Drawing.Size(908, 447)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.Label1)
+        Me.DoubleBuffered = True
         Me.Name = "TestLab"
         Me.Text = "TestLab"
         Me.ResumeLayout(False)
