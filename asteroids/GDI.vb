@@ -9,6 +9,7 @@ Structure SpaceObject
     Public vy As Double
     'Asteroid property
     Public size As Integer
+    Public type As Integer
     'Missile property
     Public launchTime As Integer
 End Structure
@@ -76,8 +77,8 @@ Public Class GDI
 
     Private Function make_asteroid(ByVal size As Integer) As SpaceObject
         Dim asteroid As SpaceObject = New SpaceObject
-        asteroid.vx = r.NextDouble() * STARTING_ASTEROID_SPEED
-        asteroid.vy = r.NextDouble() * STARTING_ASTEROID_SPEED
+        asteroid.vx = r.NextDouble() * STARTING_ASTEROID_SPEED * 2 - STARTING_ASTEROID_SPEED
+        asteroid.vy = r.NextDouble() * STARTING_ASTEROID_SPEED * 2 - STARTING_ASTEROID_SPEED
         asteroid.size = size
         asteroid.x = r.Next(Me.Width)
         asteroid.y = r.Next(Me.Height)
@@ -268,7 +269,7 @@ Public Class GDI
             imgAsteroid = New Rectangle(asteroids(i).x - 25, asteroids(i).y - 25, 50, 50)
             g.FillRectangle(asteroidBrush, imgAsteroid)
         Next
-        asteroidBrush.Dispose()
+        'asteroidBrush.Dispose()
         'Draw spaceship
         imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
         g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
@@ -281,5 +282,14 @@ Public Class GDI
             End If
         Next
         missileBrush.Dispose()
+        'TEST
+        Dim myPointArray As Point() = _
+           {New Point(0, 0), New Point(50, 30), New Point(30, 60)}
+        'g.DrawPolygon(myPen, myPointArray)
+        g.FillPolygon(asteroidBrush, myPointArray)
+    End Sub
+
+    Private Sub UpdateAsteroidPoints(ByRef asteroid As SpaceObject)
+
     End Sub
 End Class
