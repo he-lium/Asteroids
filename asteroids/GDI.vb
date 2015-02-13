@@ -16,15 +16,17 @@ Structure SpaceObject
 End Structure
 
 Public Class GDI
-    Const NUM_ASTEROIDS As Integer = 3
+
+#Region "Initialise"
+    Const NUM_ASTEROIDS As Integer = 5
     Const MAX_SPEED As Integer = 14
-    Const ACCELERATION As Double = 0.1
+    Const ACCELERATION As Double = 0.15
     Const TORQUE As Double = 0.03
-    Const STARTING_ASTEROID_SPEED As Integer = 7
-    Const MAX_ASTEROID_SPEED As Integer = 10
+    Const STARTING_ASTEROID_SPEED As Integer = 5
+    Const MAX_ASTEROID_SPEED As Integer = 8
     Const ASTEROID_EXPEL_SPEED As Integer = 18
     Const MAX_ASTEROID_SIZE As Integer = 3
-    Const GRAVITY As Integer = 9000
+    Const GRAVITY As Integer = 3000
     Const MAX_GRAVITY As Integer = 10
     Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
@@ -45,27 +47,23 @@ Public Class GDI
     Dim leftKey As Boolean = False
     Dim rightKey As Boolean = False
     Dim spaceKey As Boolean = False
-    Dim fps As Integer = 0
+    Dim fps As Stopwatch = Stopwatch.StartNew
+    Dim framecount As Integer = 1
     Dim gravityX As Integer
     Dim gravityY As Integer
     Dim r As Random
     Dim g As Graphics
     Dim imgSpaceship As Bitmap
-
-    Private Function truemod(ByVal x As Integer, ByVal y As Integer) As Integer
-        Return ((x Mod y) + y) Mod y
-    End Function
-
-    Private Function floatmod(ByVal x As Double, ByVal y As Integer) As Double
-        Return ((x Mod y) + y) Mod y
-    End Function
+    Dim dragGravityWell As Boolean
+    Dim mouseX As Integer
+    Dim mouseY As Integer
 
     Private Sub GDI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         r = New Random()
         'New spaceship, center of screen, zero velocity
         spaceship = New SpaceObject
-        spaceship.x = 0
-        spaceship.y = 0
+        spaceship.x = 20
+        spaceship.y = 20
         spaceship.vx = 0
         spaceship.vy = 0
         Randomize()
@@ -77,6 +75,7 @@ Public Class GDI
         Next
         gravityX = picGravity.Left + picGravity.Width / 2
         gravityY = picGravity.Top + picGravity.Height / 2
+        fps.Start()
     End Sub
 
     Private Function make_asteroid(ByVal size As Integer) As SpaceObject
@@ -97,35 +96,49 @@ Public Class GDI
         missile.launchTime = 0
     End Function
 
+#End Region
+
+    Private Function truemod(ByVal x As Integer, ByVal y As Integer) As Integer
+        Return ((x Mod y) + y) Mod y
+    End Function
+
+    Private Function floatmod(ByVal x As Double, ByVal y As Integer) As Double
+        Return ((x Mod y) + y) Mod y
+    End Function
+
+#Region "Key Controls"
+
     Private Sub Form1_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         If e.KeyCode = Keys.Up Then
-            upkey = True
+            upKey = True
         End If
         If e.KeyCode = Keys.Left Then
-            leftkey = True
+            leftKey = True
         End If
         If e.KeyCode = Keys.Right Then
-            rightkey = True
+            rightKey = True
         End If
         If e.KeyCode = Keys.Space Then
-            spacekey = True
+            spaceKey = True
         End If
     End Sub
 
     Private Sub Form1_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
         If e.KeyCode = Keys.Up Then
-            upkey = False
+            upKey = False
         End If
         If e.KeyCode = Keys.Left Then
-            leftkey = False
+            leftKey = False
         End If
         If e.KeyCode = Keys.Right Then
-            rightkey = False
+            rightKey = False
         End If
         If e.KeyCode = Keys.Space Then
-            spacekey = False
+            spaceKey = False
         End If
     End Sub
+
+#End Region
 
     Private Sub updateGame(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles updateTimer.Tick
         If leftKey = True Then
@@ -155,13 +168,21 @@ Public Class GDI
             Next
         End If
         UpdateMissiles()
-        fps += 1
+        CheckAsteroidCollision()
         'Debugging outputs
         lblDegrees.Text = degrees.ToString() + "°"
         lblVx.Text = "vx: " + FormatNumber(spaceship.vx, 2)
         lblVy.Text = "vy: " + FormatNumber(spaceship.vy, 2)
         'Draw graphics
         Me.Invalidate()
+        If framecount = 5 Then
+            lblFPS.Text = (FormatNumber(5 / (fps.Elapsed.TotalMilliseconds / 1000), 2)).ToString() + " fps"
+            fps.Reset()
+            fps.Start()
+            framecount = 1
+        Else
+            framecount += 1
+        End If
     End Sub
 
     Private Sub ApplyGravity(ByRef obj As SpaceObject, ByVal maxSpeed As Integer, ByVal strength As Single)
@@ -207,6 +228,19 @@ Public Class GDI
                     ApplyGravity(missiles(i), MAX_MISSILE_SPEED, 0.75)
                     MoveObject(missiles(i))
                     missiles(i).launchTime = missiles(i).launchTime + 1
+                    'Check missile collision
+                    For a = 0 To asteroids.Count - 1
+                        Dim dist = Math.Sqrt((asteroids(a).x - missiles(i).x) * (asteroids(a).x - missiles(i).x) + (asteroids(a).y - missiles(i).y) * (asteroids(a).y - missiles(i).y))
+                        If asteroids(a).size = 3 And dist < 65 Then
+                            asteroids.RemoveAt(a)
+                            'Deactivate After destroying asteroid
+                            missiles(i).launchTime = 0
+                            Exit For
+                        ElseIf dist < 30 Then
+                            asteroids.RemoveAt(a)
+                            Exit For
+                        End If
+                    Next
                 End If
             End If
         Next
@@ -233,11 +267,6 @@ Public Class GDI
         Next
         Return -1
     End Function
-
-    Private Sub fpsTimer_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles fpsTimer.Tick
-        lblFPS.Text = fps.ToString() + "fps"
-        fps = 0
-    End Sub
 
     'Source: the internet, will find later
     Public Function RotateImg(ByVal bmpimage As Bitmap, ByVal angle As Single) As Bitmap
@@ -283,8 +312,14 @@ Public Class GDI
         Dim asteroidBrush As New SolidBrush(Color.Red)
         Dim imgAsteroid As Rectangle
         For i = 0 To asteroids.Count - 1
-            imgAsteroid = New Rectangle(asteroids(i).x - 25, asteroids(i).y - 25, 50, 50)
-            g.FillRectangle(asteroidBrush, imgAsteroid)
+            If asteroids(i).size = 3 Then
+                imgAsteroid = New Rectangle(asteroids(i).x - 60, asteroids(i).y - 60, 120, 120)
+                g.FillEllipse(asteroidBrush, imgAsteroid)
+            Else
+                imgAsteroid = New Rectangle(asteroids(i).x - 25, asteroids(i).y - 25, 50, 50)
+                g.FillEllipse(asteroidBrush, imgAsteroid)
+            End If
+
         Next
         'asteroidBrush.Dispose()
         'Draw spaceship
@@ -301,14 +336,43 @@ Public Class GDI
         missileBrush.Dispose()
     End Sub
 
-    Private Sub UpdateAsteroidPoints(ByRef asteroid As SpaceObject)
-
-    End Sub
-
     Private Sub expel(ByRef obj As SpaceObject)
         If checkGravityCollision(obj) Then
             obj.expelMode = True
         End If
     End Sub
 
+    Private Sub CheckAsteroidCollision()
+        For i = 0 To asteroids.Count - 1
+            Dim dist = Math.Sqrt((asteroids(i).x - spaceship.x) * (asteroids(i).x - spaceship.x) + (asteroids(i).y - spaceship.y) * (asteroids(i).y - spaceship.y))
+            If asteroids(i).size = 3 And dist < 65 Then
+                updateTimer.Stop()
+            ElseIf dist < 30 Then
+                updateTimer.Stop()
+            End If
+        Next
+    End Sub
+
+#Region "Drag and Drop Gravity Well"
+
+    Private Sub picGravity_MouseDown(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) Handles picGravity.MouseDown
+        dragGravityWell = True
+        mouseX = e.X
+        mouseY = e.Y
+    End Sub
+
+    Private Sub picGravity_MouseUp(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) Handles picGravity.MouseUp
+        dragGravityWell = False
+    End Sub
+
+    Private Sub picGravity_MouseMove(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) Handles picGravity.MouseMove
+        If dragGravityWell = True Then
+            picGravity.Left = picGravity.Left + e.X - mouseX
+            picGravity.Top = picGravity.Top + e.Y - mouseY
+            gravityX = picGravity.Left + picGravity.Width / 2
+            gravityY = picGravity.Top + picGravity.Height / 2
+        End If
+    End Sub
+
+#End Region
 End Class

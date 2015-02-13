@@ -93,12 +93,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="TestLab.Designer.vb">
-      <DependentUpon>TestLab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="TestLab.vb">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GDI.resx">
@@ -109,9 +103,6 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestLab.resx">
-      <DependentUpon>TestLab.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
