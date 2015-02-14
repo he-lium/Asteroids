@@ -18,12 +18,12 @@ End Structure
 Public Class GDI
 
 #Region "Initialise"
-    Const NUM_ASTEROIDS As Integer = 5
+    Const NUM_ASTEROIDS As Integer = 3
     Const MAX_SPEED As Integer = 14
     Const ACCELERATION As Double = 0.15
     Const TORQUE As Double = 0.03
     Const STARTING_ASTEROID_SPEED As Integer = 5
-    Const MAX_ASTEROID_SPEED As Integer = 8
+    Const MAX_ASTEROID_SPEED As Integer = 6
     Const ASTEROID_EXPEL_SPEED As Integer = 18
     Const MAX_ASTEROID_SIZE As Integer = 3
     Const GRAVITY As Integer = 3000
@@ -31,7 +31,7 @@ Public Class GDI
     Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
     Const MISSILE_COOLDOWN_PEROID As Integer = 150 / 16
-    Const MAX_MISSILE_TIME As Integer = 1300 / 16
+    Const MAX_MISSILE_TIME As Integer = 1000 / 16
     Const MISSILE_SPEED As Integer = 8
     Const MAX_MISSILE_SPEED As Integer = 30
     Const EXPEL_DISTANCE As Integer = 50
@@ -232,12 +232,19 @@ Public Class GDI
                     For a = 0 To asteroids.Count - 1
                         Dim dist = Math.Sqrt((asteroids(a).x - missiles(i).x) * (asteroids(a).x - missiles(i).x) + (asteroids(a).y - missiles(i).y) * (asteroids(a).y - missiles(i).y))
                         If asteroids(a).size = 3 And dist < 65 Then
-                            asteroids.RemoveAt(a)
+                            SplitAsteroid(asteroids(a))
+                            'Deactivate After destroying asteroid
+                            missiles(i).launchTime = 0
+                            Exit For 'equivalent to break
+                        ElseIf asteroids(a).size = 2 And dist < 30 Then
+                            SplitAsteroid(asteroids(a))
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
                             Exit For
-                        ElseIf dist < 30 Then
+                        ElseIf dist < 15 Then
                             asteroids.RemoveAt(a)
+                            'Deactivate After destroying asteroid
+                            missiles(i).launchTime = 0
                             Exit For
                         End If
                     Next
@@ -257,6 +264,16 @@ Public Class GDI
             End If
             lblUpdates.Text = "Launched Missile " + newMissile.ToString()
         End If
+    End Sub
+
+    Private Sub SplitAsteroid(ByRef asteroid As SpaceObject)
+        asteroid.size = asteroid.size - 1
+        asteroid.vx = -asteroid.vx
+        Dim fragment As SpaceObject = asteroid
+        'Make the two asteroids go in opposite directions
+        asteroid.vx = -asteroid.vx
+        asteroid.vy = -asteroid.vy
+        asteroids.Add(fragment)
     End Sub
 
     Private Function FindInactiveMissile() As Integer
@@ -315,8 +332,11 @@ Public Class GDI
             If asteroids(i).size = 3 Then
                 imgAsteroid = New Rectangle(asteroids(i).x - 60, asteroids(i).y - 60, 120, 120)
                 g.FillEllipse(asteroidBrush, imgAsteroid)
-            Else
+            ElseIf asteroids(i).size = 2 Then
                 imgAsteroid = New Rectangle(asteroids(i).x - 25, asteroids(i).y - 25, 50, 50)
+                g.FillEllipse(asteroidBrush, imgAsteroid)
+            Else
+                imgAsteroid = New Rectangle(asteroids(i).x - 7, asteroids(i).y - 7, 14, 14)
                 g.FillEllipse(asteroidBrush, imgAsteroid)
             End If
 
@@ -347,7 +367,9 @@ Public Class GDI
             Dim dist = Math.Sqrt((asteroids(i).x - spaceship.x) * (asteroids(i).x - spaceship.x) + (asteroids(i).y - spaceship.y) * (asteroids(i).y - spaceship.y))
             If asteroids(i).size = 3 And dist < 65 Then
                 updateTimer.Stop()
-            ElseIf dist < 30 Then
+            ElseIf asteroids(i).size = 2 And dist < 30 Then
+                updateTimer.Stop()
+            ElseIf dist < 15 Then
                 updateTimer.Stop()
             End If
         Next
