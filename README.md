@@ -3,6 +3,6 @@ Asteroids
 
 SDD Minor Project
 
-Kevin Ni,
+Kevin,
 
-Dominic He
+Dominic
