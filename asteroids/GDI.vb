@@ -30,8 +30,8 @@ Public Class GDI
     Const MAX_GRAVITY As Integer = 10
     Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
-    Const MISSILE_COOLDOWN_PEROID As Integer = 450 / 16
-    Const MAX_MISSILE_TIME As Integer = 1000 / 16
+    Const MISSILE_COOLDOWN_PEROID As Integer = 300 / 16
+    Const MAX_MISSILE_TIME As Integer = 2000 / 16
     Const MISSILE_SPEED As Integer = 8
     Const MAX_MISSILE_SPEED As Integer = 30
     Const EXPEL_DISTANCE As Integer = 50
@@ -50,6 +50,7 @@ Public Class GDI
     Dim leftKey As Boolean = False
     Dim rightKey As Boolean = False
     Dim spaceKey As Boolean = False
+    Dim escKey As Boolean = False
     Dim fps As Stopwatch = Stopwatch.StartNew
     Dim framecount As Integer = 1
     Dim gravityX As Integer
@@ -68,7 +69,7 @@ Public Class GDI
     Private Sub GDI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
     End Sub
 
-    Private Sub NewGame()
+    Private Sub NewGame() Handles MyBase.Load
         r = New Random()
         'New spaceship, center of screen, zero velocity
         spaceship = New SpaceObject
@@ -92,11 +93,12 @@ Public Class GDI
         crashed = 0
         fellIntoGravity = 0
         missileLaunchCooldown = 0
-        updateTimer.Start()
     End Sub
 
     Private Sub nextLevel(sender As Object, e As EventArgs) Handles nextLevelTimer.Tick
         NUM_ASTEROIDS = NUM_ASTEROIDS + 1
+        livesLeft += 1
+        lblLives.Text = "Lives left: " + livesLeft.ToString()
         For i = 0 To NUM_ASTEROIDS - 1
             asteroids.Add(make_asteroid(MAX_ASTEROID_SIZE))
         Next
@@ -113,6 +115,7 @@ Public Class GDI
         crashTimer.Stop()
         crashed = False
         fellIntoGravity = False
+
         livesLeft -= 1
         If livesLeft >= 0 Then
             lblLives.Text = "Lives left: " + livesLeft.ToString()
@@ -162,6 +165,9 @@ Public Class GDI
         If e.KeyCode = Keys.Space Then
             spaceKey = True
         End If
+        If e.KeyCode = Keys.Escape Then
+            escKey = True
+        End If
     End Sub
 
     Private Sub Form1_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyUp
@@ -176,6 +182,9 @@ Public Class GDI
         End If
         If e.KeyCode = Keys.Space Then
             spaceKey = False
+        End If
+        If e.KeyCode = Keys.Escape Then
+            escKey = False
         End If
     End Sub
 
@@ -241,6 +250,10 @@ Public Class GDI
             framecount = 1
         Else
             framecount += 1
+        End If
+        If escKey = True Then
+            updateTimer.Stop()
+            panelMainMenu.Show()
         End If
     End Sub
 
@@ -480,7 +493,7 @@ Public Class GDI
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        NewGame()
+        updateTimer.Start()
         panelMainMenu.Hide()
         Me.ActiveControl = Nothing
     End Sub
