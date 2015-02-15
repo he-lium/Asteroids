@@ -30,17 +30,22 @@ Partial Class GDI
         Me.lblVy = New System.Windows.Forms.Label()
         Me.lblUpdates = New System.Windows.Forms.Label()
         Me.nextLevelTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.picGravity = New System.Windows.Forms.PictureBox()
         Me.crashTimer = New System.Windows.Forms.Timer(Me.components)
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblLives = New System.Windows.Forms.Label()
         Me.lblScore = New System.Windows.Forms.Label()
+        Me.picGravity = New System.Windows.Forms.PictureBox()
+        Me.panelMainMenu = New System.Windows.Forms.Panel()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
         CType(Me.picGravity, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.panelMainMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'updateTimer
         '
-        Me.updateTimer.Enabled = True
         Me.updateTimer.Interval = 1
         '
         'lblFPS
@@ -97,18 +102,6 @@ Partial Class GDI
         '
         Me.nextLevelTimer.Interval = 1400
         '
-        'picGravity
-        '
-        Me.picGravity.BackColor = System.Drawing.Color.Transparent
-        Me.picGravity.Image = Global.asteroids.My.Resources.Resources.gravity_well
-        Me.picGravity.Location = New System.Drawing.Point(751, 316)
-        Me.picGravity.Margin = New System.Windows.Forms.Padding(4)
-        Me.picGravity.Name = "picGravity"
-        Me.picGravity.Size = New System.Drawing.Size(480, 443)
-        Me.picGravity.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picGravity.TabIndex = 2
-        Me.picGravity.TabStop = False
-        '
         'crashTimer
         '
         Me.crashTimer.Interval = 1400
@@ -149,12 +142,82 @@ Partial Class GDI
         Me.lblScore.TabIndex = 8
         Me.lblScore.Text = "Score: 0"
         '
+        'picGravity
+        '
+        Me.picGravity.BackColor = System.Drawing.Color.Transparent
+        Me.picGravity.Image = Global.asteroids.My.Resources.Resources.gravity_well
+        Me.picGravity.Location = New System.Drawing.Point(751, 316)
+        Me.picGravity.Margin = New System.Windows.Forms.Padding(4)
+        Me.picGravity.Name = "picGravity"
+        Me.picGravity.Size = New System.Drawing.Size(480, 443)
+        Me.picGravity.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picGravity.TabIndex = 2
+        Me.picGravity.TabStop = False
+        '
+        'panelMainMenu
+        '
+        Me.panelMainMenu.BackColor = System.Drawing.Color.Black
+        Me.panelMainMenu.Controls.Add(Me.Button3)
+        Me.panelMainMenu.Controls.Add(Me.Button2)
+        Me.panelMainMenu.Controls.Add(Me.Button1)
+        Me.panelMainMenu.Controls.Add(Me.Label2)
+        Me.panelMainMenu.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.panelMainMenu.Location = New System.Drawing.Point(122, 263)
+        Me.panelMainMenu.Name = "panelMainMenu"
+        Me.panelMainMenu.Size = New System.Drawing.Size(732, 413)
+        Me.panelMainMenu.TabIndex = 9
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 30.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.GhostWhite
+        Me.Label2.Location = New System.Drawing.Point(227, 26)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(249, 61)
+        Me.Label2.TabIndex = 0
+        Me.Label2.Text = "Asteroids"
+        '
+        'Button1
+        '
+        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.128!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button1.Location = New System.Drawing.Point(152, 135)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(406, 61)
+        Me.Button1.TabIndex = 1
+        Me.Button1.Text = "Play"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
+        'Button2
+        '
+        Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.128!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button2.Location = New System.Drawing.Point(152, 211)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(406, 61)
+        Me.Button2.TabIndex = 2
+        Me.Button2.Text = "Help"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'Button3
+        '
+        Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 16.128!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button3.Location = New System.Drawing.Point(152, 287)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(406, 61)
+        Me.Button3.TabIndex = 3
+        Me.Button3.Text = "Quit"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
         'GDI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Gray
         Me.ClientSize = New System.Drawing.Size(1424, 807)
+        Me.Controls.Add(Me.panelMainMenu)
         Me.Controls.Add(Me.lblScore)
         Me.Controls.Add(Me.lblLives)
         Me.Controls.Add(Me.Label1)
@@ -172,6 +235,8 @@ Partial Class GDI
         Me.Text = "GDI"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.picGravity, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.panelMainMenu.ResumeLayout(False)
+        Me.panelMainMenu.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -188,4 +253,9 @@ Partial Class GDI
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents lblLives As System.Windows.Forms.Label
     Friend WithEvents lblScore As System.Windows.Forms.Label
+    Friend WithEvents panelMainMenu As System.Windows.Forms.Panel
+    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents Button2 As System.Windows.Forms.Button
 End Class
