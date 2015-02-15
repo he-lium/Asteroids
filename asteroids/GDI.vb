@@ -30,7 +30,7 @@ Public Class GDI
     Const MAX_GRAVITY As Integer = 10
     Const MAX_MISSILES As Integer = 5
     Const MISSILE_SIZE As Integer = 7
-    Const MISSILE_COOLDOWN_PEROID As Integer = 150 / 16
+    Const MISSILE_COOLDOWN_PEROID As Integer = 450 / 16
     Const MAX_MISSILE_TIME As Integer = 1000 / 16
     Const MISSILE_SPEED As Integer = 8
     Const MAX_MISSILE_SPEED As Integer = 30
@@ -187,14 +187,17 @@ Public Class GDI
         End If
         If leftKey = True Then
             direction += Math.PI * TORQUE
+            cooldown = 0
         End If
         If rightKey = True Then
             direction -= Math.PI * TORQUE
+            cooldown = 0
         End If
         degrees = truemod(direction * (180 / Math.PI), 360)
         If upKey Then
             spaceship.vy -= Math.Sin(direction) * ACCELERATION
             spaceship.vx += Math.Cos(direction) * ACCELERATION
+            cooldown = 0
         End If
         'Move objects
         If cooldown = 0 Then
@@ -314,7 +317,8 @@ Public Class GDI
             End If
         Next
         'Launch missiles
-        If spaceKey = True And missileLaunchCooldown = 0 Then
+        If spaceKey = True And missileLaunchCooldown = 0 And fellIntoGravity = 0 And crashed = 0 Then
+            cooldown = 0
             missileLaunchCooldown = MISSILE_COOLDOWN_PEROID
             Dim newMissile = FindInactiveMissile()
             If newMissile <> -1 Then
