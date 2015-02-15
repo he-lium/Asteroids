@@ -18,11 +18,11 @@ End Structure
 Public Class GDI
 
 #Region "Initialise"
-    Const NUM_ASTEROIDS As Integer = 3
-    Const MAX_SPEED As Integer = 14
+    Dim NUM_ASTEROIDS As Integer = 2
+    Const MAX_SPEED As Integer = 13
     Const ACCELERATION As Double = 0.15
     Const TORQUE As Double = 0.03
-    Const STARTING_ASTEROID_SPEED As Integer = 5
+    Const STARTING_ASTEROID_SPEED As Integer = 4
     Const MAX_ASTEROID_SPEED As Integer = 6
     Const ASTEROID_EXPEL_SPEED As Integer = 18
     Const MAX_ASTEROID_SIZE As Integer = 3
@@ -80,6 +80,15 @@ Public Class GDI
         gravityY = picGravity.Top + picGravity.Height / 2
         cooldown = COOLDOWN_PEROID
         fps.Start()
+    End Sub
+
+    Private Sub nextLevel(sender As Object, e As EventArgs) Handles nextLevelTimer.Tick
+        NUM_ASTEROIDS = NUM_ASTEROIDS + 1
+        For i = 0 To NUM_ASTEROIDS - 1
+            asteroids.Add(make_asteroid(MAX_ASTEROID_SIZE))
+        Next
+        cooldown = COOLDOWN_PEROID
+        nextLevelTimer.Stop()
     End Sub
 
     Private Function make_asteroid(ByVal size As Integer) As SpaceObject
@@ -179,6 +188,9 @@ Public Class GDI
         If cooldown > 0 Then
             cooldown = cooldown - 1
         End If
+        If asteroids.Count = 0 Then
+            nextLevelTimer.Start()
+        End If
         'Debugging outputs
         lblDegrees.Text = degrees.ToString() + "°"
         lblVx.Text = "vx: " + FormatNumber(spaceship.vx, 2)
@@ -186,6 +198,7 @@ Public Class GDI
         'Draw graphics
         Me.Invalidate()
         If framecount = 5 Then
+
             lblFPS.Text = (FormatNumber(5 / (fps.Elapsed.TotalMilliseconds / 1000), 2)).ToString() + " fps"
             fps.Reset()
             fps.Start()

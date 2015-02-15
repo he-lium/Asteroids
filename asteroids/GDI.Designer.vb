@@ -30,6 +30,7 @@ Partial Class GDI
         Me.lblVx = New System.Windows.Forms.Label()
         Me.lblVy = New System.Windows.Forms.Label()
         Me.lblUpdates = New System.Windows.Forms.Label()
+        Me.nextLevelTimer = New System.Windows.Forms.Timer(Me.components)
         CType(Me.picGravity, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -63,7 +64,7 @@ Partial Class GDI
         Me.picGravity.BackColor = System.Drawing.Color.Transparent
         Me.picGravity.Image = Global.asteroids.My.Resources.Resources.gravity_well
         Me.picGravity.Location = New System.Drawing.Point(751, 316)
-        Me.picGravity.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.picGravity.Margin = New System.Windows.Forms.Padding(4)
         Me.picGravity.Name = "picGravity"
         Me.picGravity.Size = New System.Drawing.Size(480, 443)
         Me.picGravity.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -100,6 +101,10 @@ Partial Class GDI
         Me.lblUpdates.TabIndex = 5
         Me.lblUpdates.Text = "....."
         '
+        'nextLevelTimer
+        '
+        Me.nextLevelTimer.Interval = 1400
+        '
         'GDI
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -114,7 +119,7 @@ Partial Class GDI
         Me.Controls.Add(Me.lblFPS)
         Me.DoubleBuffered = True
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False
         Me.Name = "GDI"
         Me.Text = "GDI"
@@ -131,4 +136,5 @@ Partial Class GDI
     Friend WithEvents lblVx As System.Windows.Forms.Label
     Friend WithEvents lblVy As System.Windows.Forms.Label
     Friend WithEvents lblUpdates As System.Windows.Forms.Label
+    Friend WithEvents nextLevelTimer As System.Windows.Forms.Timer
 End Class
