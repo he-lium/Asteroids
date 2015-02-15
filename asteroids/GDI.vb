@@ -59,14 +59,17 @@ Public Class GDI
     Dim dragGravityWell As Boolean
     Dim mouseX As Integer
     Dim mouseY As Integer
+    Dim livesLeft As Integer
     Dim cooldown As Integer
+    Dim crashed As Boolean = 0
+    Dim fellIntoGravity As Boolean = 0
 
     Private Sub GDI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         r = New Random()
         'New spaceship, center of screen, zero velocity
         spaceship = New SpaceObject
-        spaceship.x = 20
-        spaceship.y = 20
+        spaceship.x = 300
+        spaceship.y = 300
         spaceship.vx = 0
         spaceship.vy = 0
         Randomize()
@@ -80,6 +83,7 @@ Public Class GDI
         gravityY = picGravity.Top + picGravity.Height / 2
         cooldown = COOLDOWN_PEROID
         fps.Start()
+        livesLeft = 2
     End Sub
 
     Private Sub nextLevel(sender As Object, e As EventArgs) Handles nextLevelTimer.Tick
@@ -89,6 +93,21 @@ Public Class GDI
         Next
         cooldown = COOLDOWN_PEROID
         nextLevelTimer.Stop()
+    End Sub
+
+    Private Sub revive(sender As Object, e As EventArgs) Handles crashTimer.Tick
+        spaceship.x = 300
+        spaceship.y = 300
+        spaceship.vx = 0
+        spaceship.vy = 0
+        cooldown = COOLDOWN_PEROID
+        crashTimer.Stop()
+        crashed = False
+        fellIntoGravity = False
+        livesLeft -= 1
+        If livesLeft >= 0 Then
+            lblLives.Text = "Lives left: " + livesLeft.ToString()
+        End If
     End Sub
 
     Private Function make_asteroid(ByVal size As Integer) As SpaceObject
@@ -154,6 +173,9 @@ Public Class GDI
 #End Region
 
     Private Sub updateGame(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles updateTimer.Tick
+        If livesLeft = -1 Then
+            updateTimer.Stop()
+        End If
         If leftKey = True Then
             direction += Math.PI * TORQUE
         End If
@@ -170,15 +192,17 @@ Public Class GDI
             CheckAsteroidCollision()
             ApplyGravity(spaceship, MAX_SPEED, 1)
         End If
-
-        MoveObject(spaceship)
+        If crashed = False Then
+            MoveObject(spaceship)
+        End If
         For i = 0 To asteroids.Count - 1
             ApplyGravity(asteroids(i), MAX_ASTEROID_SPEED, 0.25)
             MoveObject(asteroids(i))
         Next
         If GRAVITY > 0 Then
             If checkGravityCollision(spaceship) = True Then
-                lblUpdates.Text = "Fell into gravity well"
+                fellIntoGravity = True
+                crashTimer.Start()
             End If
             For i = 0 To asteroids.Count - 1
                 expel(asteroids(i))
@@ -255,19 +279,22 @@ Public Class GDI
                     For a = 0 To asteroids.Count - 1
                         Dim dist = Math.Sqrt((asteroids(a).x - missiles(i).x) * (asteroids(a).x - missiles(i).x) + (asteroids(a).y - missiles(i).y) * (asteroids(a).y - missiles(i).y))
                         If asteroids(a).size = 3 And dist < 65 Then
-                            score = score + 100
+                            score = score + 20
+                            lblScore.Text = "Score: " + score.ToString()
                             SplitAsteroid(asteroids(a))
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
                             Exit For 'equivalent to break
                         ElseIf asteroids(a).size = 2 And dist < 30 Then
-                            score = score + 100
+                            score = score + 20
+                            lblScore.Text = "Score: " + score.ToString()
                             SplitAsteroid(asteroids(a))
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
                             Exit For
                         ElseIf dist < 30 Then
-                            score = score + 100
+                            score = score + 20
+                            lblScore.Text = "Score: " + score.ToString()
                             asteroids.RemoveAt(a)
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
@@ -370,7 +397,11 @@ Public Class GDI
         'asteroidBrush.Dispose()
         'Draw spaceship
         If cooldown Mod 2 = 0 Then
-            imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
+            If crashed = True Then
+                imgSpaceship = My.Resources.explosion
+            Else
+                imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
+            End If
             g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
             imgSpaceship.Dispose()
         End If
@@ -394,11 +425,14 @@ Public Class GDI
         For i = 0 To asteroids.Count - 1
             Dim dist = Math.Sqrt((asteroids(i).x - spaceship.x) * (asteroids(i).x - spaceship.x) + (asteroids(i).y - spaceship.y) * (asteroids(i).y - spaceship.y))
             If asteroids(i).size = 3 And dist < 65 Then
-                updateTimer.Stop()
+                crashed = True
+                crashTimer.Start()
             ElseIf asteroids(i).size = 2 And dist < 30 Then
-                updateTimer.Stop()
+                crashed = True
+                crashTimer.Start()
             ElseIf dist < 15 Then
-                updateTimer.Stop()
+                crashed = True
+                crashTimer.Start()
             End If
         Next
     End Sub
@@ -425,4 +459,5 @@ Public Class GDI
     End Sub
 
 #End Region
+
 End Class
