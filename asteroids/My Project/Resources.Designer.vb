@@ -71,6 +71,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property explode() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("explode", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property explosion() As System.Drawing.Bitmap
@@ -81,12 +90,49 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property fell() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("fell", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property gravity_well() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("gravity well", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property hit() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("hit", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Image04() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Image04", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property shoot() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("shoot", resourceCulture)
             End Get
         End Property
         

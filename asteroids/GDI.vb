@@ -66,6 +66,7 @@ Public Class GDI
     Dim crashed As Boolean = 0
     Dim fellIntoGravity As Boolean = 0
     Dim prelude As Boolean = 0
+    Dim sound As Boolean = True
 
     Private Sub GDI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
     End Sub
@@ -232,8 +233,12 @@ Public Class GDI
         Next
         If GRAVITY > 0 Then
             If checkGravityCollision(spaceship) = True And cooldown = 0 Then
+                If sound = True Then
+                    My.Computer.Audio.Play(My.Resources.fell, AudioPlayMode.Background)
+                End If
                 fellIntoGravity = True
                 crashTimer.Start()
+
             End If
             For i = 0 To asteroids.Count - 1
                 expel(asteroids(i))
@@ -320,6 +325,9 @@ Public Class GDI
                             SplitAsteroid(asteroids(a))
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
+                            If sound = True Then
+                                My.Computer.Audio.Play(My.Resources.hit, AudioPlayMode.Background)
+                            End If
                             Exit For 'equivalent to break
                         ElseIf asteroids(a).size = 2 And dist < 30 Then
                             score = score + 10
@@ -327,6 +335,9 @@ Public Class GDI
                             SplitAsteroid(asteroids(a))
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
+                            If sound = True Then
+                                My.Computer.Audio.Play(My.Resources.hit, AudioPlayMode.Background)
+                            End If
                             Exit For
                         ElseIf dist < 30 Then
                             score = score + 10
@@ -334,6 +345,9 @@ Public Class GDI
                             asteroids.RemoveAt(a)
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
+                            If sound = True Then
+                                My.Computer.Audio.Play(My.Resources.hit, AudioPlayMode.Background)
+                            End If
                             Exit For
                         End If
                     Next
@@ -351,6 +365,9 @@ Public Class GDI
                 missiles(newMissile).y = spaceship.y
                 missiles(newMissile).vx = spaceship.vx + Math.Cos(direction) * MISSILE_SPEED
                 missiles(newMissile).vy = spaceship.vy - Math.Sin(direction) * MISSILE_SPEED
+            End If
+            If sound = True Then
+                My.Computer.Audio.Play(My.Resources.shoot, AudioPlayMode.Background)
             End If
             lblUpdates.Text = "Launched Missile " + newMissile.ToString()
         End If
@@ -387,12 +404,21 @@ Public Class GDI
             If asteroids(i).size = 3 And dist < 65 Then
                 crashed = True
                 crashTimer.Start()
+                If sound = True Then
+                    My.Computer.Audio.Play(My.Resources.explode, AudioPlayMode.Background)
+                End If
             ElseIf asteroids(i).size = 2 And dist < 30 Then
                 crashed = True
                 crashTimer.Start()
+                If sound = True Then
+                    My.Computer.Audio.Play(My.Resources.explode, AudioPlayMode.Background)
+                End If
             ElseIf dist < 15 Then
                 crashed = True
                 crashTimer.Start()
+                If sound = True Then
+                    My.Computer.Audio.Play(My.Resources.explode, AudioPlayMode.Background)
+                End If
             End If
         Next
     End Sub
@@ -491,7 +517,7 @@ Public Class GDI
             imgSpaceship.Dispose()
         End If
         'Draw missiles
-        Dim missileBrush As New SolidBrush(Color.Black)
+        Dim missileBrush As New SolidBrush(Color.WhiteSmoke)
         For i = 0 To MAX_MISSILES
             If missiles(i).launchTime > 0 Then
                 g.FillEllipse(missileBrush, New Rectangle(missiles(i).x, missiles(i).y, 10, 10))
@@ -518,5 +544,14 @@ Public Class GDI
         updateTimer.Start()
         NewGame()
         Me.ActiveControl = Nothing
+    End Sub
+
+    Private Sub btnSound_Click(sender As Object, e As EventArgs) Handles btnSound.Click
+        sound = Not sound
+        If sound = True Then
+            btnSound.Text = "Sound On"
+        Else
+            btnSound.Text = "Sound Off"
+        End If
     End Sub
 End Class
