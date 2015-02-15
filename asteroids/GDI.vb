@@ -198,6 +198,7 @@ Public Class GDI
         If livesLeft = -1 Then
             lblLives.Text = "0"
             updateTimer.Stop()
+            Button2.Enabled = False
             panelMainMenu.Show()
             lblScore.Text = "Game Over! Score: " + score.ToString()
             prelude = 0
