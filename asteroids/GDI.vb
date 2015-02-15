@@ -36,7 +36,9 @@ Public Class GDI
     Const MAX_MISSILE_SPEED As Integer = 30
     Const EXPEL_DISTANCE As Integer = 50
     Const COLLISION_DISTANCE As Integer = 15
+    Const COOLDOWN_PEROID As Integer = 200
 
+    Dim score As Integer
     Dim spaceship As SpaceObject
     Dim direction As Double = Math.PI * 0.5
     Dim degrees As Integer = 0
@@ -57,6 +59,7 @@ Public Class GDI
     Dim dragGravityWell As Boolean
     Dim mouseX As Integer
     Dim mouseY As Integer
+    Dim cooldown As Integer
 
     Private Sub GDI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         r = New Random()
@@ -75,6 +78,7 @@ Public Class GDI
         Next
         gravityX = picGravity.Left + picGravity.Width / 2
         gravityY = picGravity.Top + picGravity.Height / 2
+        cooldown = COOLDOWN_PEROID
         fps.Start()
     End Sub
 
@@ -153,7 +157,11 @@ Public Class GDI
             spaceship.vx += Math.Cos(direction) * ACCELERATION
         End If
         'Move objects
-        ApplyGravity(spaceship, MAX_SPEED, 1)
+        If cooldown = 0 Then
+            CheckAsteroidCollision()
+            ApplyGravity(spaceship, MAX_SPEED, 1)
+        End If
+
         MoveObject(spaceship)
         For i = 0 To asteroids.Count - 1
             ApplyGravity(asteroids(i), MAX_ASTEROID_SPEED, 0.25)
@@ -168,7 +176,9 @@ Public Class GDI
             Next
         End If
         UpdateMissiles()
-        CheckAsteroidCollision()
+        If cooldown > 0 Then
+            cooldown = cooldown - 1
+        End If
         'Debugging outputs
         lblDegrees.Text = degrees.ToString() + "°"
         lblVx.Text = "vx: " + FormatNumber(spaceship.vx, 2)
@@ -232,16 +242,19 @@ Public Class GDI
                     For a = 0 To asteroids.Count - 1
                         Dim dist = Math.Sqrt((asteroids(a).x - missiles(i).x) * (asteroids(a).x - missiles(i).x) + (asteroids(a).y - missiles(i).y) * (asteroids(a).y - missiles(i).y))
                         If asteroids(a).size = 3 And dist < 65 Then
+                            score = score + 100
                             SplitAsteroid(asteroids(a))
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
                             Exit For 'equivalent to break
                         ElseIf asteroids(a).size = 2 And dist < 30 Then
+                            score = score + 100
                             SplitAsteroid(asteroids(a))
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
                             Exit For
-                        ElseIf dist < 15 Then
+                        ElseIf dist < 30 Then
+                            score = score + 100
                             asteroids.RemoveAt(a)
                             'Deactivate After destroying asteroid
                             missiles(i).launchTime = 0
@@ -343,9 +356,11 @@ Public Class GDI
         Next
         'asteroidBrush.Dispose()
         'Draw spaceship
-        imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
-        g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
-        imgSpaceship.Dispose()
+        If cooldown Mod 2 = 0 Then
+            imgSpaceship = RotateImg(My.Resources.spaceship, truemod(90 - degrees, 360))
+            g.DrawImage(imgSpaceship, New Point(spaceship.x - imgSpaceship.Width / 2, spaceship.y - imgSpaceship.Height / 2))
+            imgSpaceship.Dispose()
+        End If
         'Draw missiles
         Dim missileBrush As New SolidBrush(Color.Black)
         For i = 0 To MAX_MISSILES
