@@ -86,14 +86,14 @@ Public Class GDI
         For i = 0 To MAX_MISSILES
             missiles(i) = make_missile()
         Next
-        gravityX = picGravity.Left + picGravity.Width / 2
-        gravityY = picGravity.Top + picGravity.Height / 2
         cooldown = COOLDOWN_PEROID
         fps.Start()
         livesLeft = AMOUNT_OF_LIVES
         crashed = 0
         fellIntoGravity = 0
         missileLaunchCooldown = 0
+        score = 0
+
     End Sub
 
     Private Sub nextLevel(sender As Object, e As EventArgs) Handles nextLevelTimer.Tick
@@ -116,7 +116,6 @@ Public Class GDI
         crashTimer.Stop()
         crashed = False
         fellIntoGravity = False
-
         livesLeft -= 1
         If livesLeft >= 0 Then
             lblLives.Text = "Lives left: " + livesLeft.ToString()
@@ -192,8 +191,17 @@ Public Class GDI
 #End Region
 
     Private Sub updateGame(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles updateTimer.Tick
+        gravityX = picGravity.Left + picGravity.Width / 2
+        gravityY = picGravity.Top + picGravity.Height / 2
+        lblScore.Text = "Score: " + score.ToString()
+        lblLives.Text = "Lives left: " + livesLeft.ToString()
         If livesLeft = -1 Then
+            lblLives.Text = "0"
             updateTimer.Stop()
+            panelMainMenu.Show()
+            lblScore.Text = "Game Over! Score: " + score.ToString()
+            prelude = 0
+            NewGame()
         End If
         If leftKey = True Then
             direction += Math.PI * TORQUE
@@ -238,6 +246,7 @@ Public Class GDI
             nextLevelTimer.Start()
         End If
         'Debugging outputs
+
         lblDegrees.Text = degrees.ToString() + "°"
         lblVx.Text = "vx: " + FormatNumber(spaceship.vx, 2)
         lblVy.Text = "vy: " + FormatNumber(spaceship.vy, 2)
@@ -499,6 +508,14 @@ Public Class GDI
         updateTimer.Start()
         panelMainMenu.Hide()
         prelude = 1
+        Me.ActiveControl = Nothing
+        Button2.Enabled = True
+    End Sub
+
+    Private Sub Button2_Click(sender As System.Object, e As System.EventArgs) Handles Button2.Click
+        panelMainMenu.Hide()
+        updateTimer.Start()
+        NewGame()
         Me.ActiveControl = Nothing
     End Sub
 End Class
