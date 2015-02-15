@@ -65,6 +65,7 @@ Public Class GDI
     Dim cooldown As Integer
     Dim crashed As Boolean = 0
     Dim fellIntoGravity As Boolean = 0
+    Dim prelude As Boolean = 0
 
     Private Sub GDI_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
     End Sub
@@ -96,7 +97,7 @@ Public Class GDI
     End Sub
 
     Private Sub nextLevel(sender As Object, e As EventArgs) Handles nextLevelTimer.Tick
-        NUM_ASTEROIDS = NUM_ASTEROIDS + 1
+        NUM_ASTEROIDS = NUM_ASTEROIDS + 2
         livesLeft += 1
         lblLives.Text = "Lives left: " + livesLeft.ToString()
         For i = 0 To NUM_ASTEROIDS - 1
@@ -398,9 +399,11 @@ Public Class GDI
 #Region "Drag and Drop Gravity Well"
 
     Private Sub picGravity_MouseDown(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) Handles picGravity.MouseDown
-        dragGravityWell = True
-        mouseX = e.X
-        mouseY = e.Y
+        If prelude = 0 Then
+            dragGravityWell = True
+            mouseX = e.X
+            mouseY = e.Y
+        End If
     End Sub
 
     Private Sub picGravity_MouseUp(sender As System.Object, e As System.Windows.Forms.MouseEventArgs) Handles picGravity.MouseUp
@@ -495,6 +498,7 @@ Public Class GDI
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         updateTimer.Start()
         panelMainMenu.Hide()
+        prelude = 1
         Me.ActiveControl = Nothing
     End Sub
 End Class
